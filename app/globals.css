@@ -1,26 +1,183 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #2d3543;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  /* Brand Colors - Primary (Beige) */
+  --color-primary-50: #f8f6f0;
+  --color-primary-100: #f0ede0;
+  --color-primary-200: #e1d9c1;
+  --color-primary-300: #d2c5a2;
+  --color-primary-400: #c3b183;
+  --color-primary-500: #b49d64;
+  --color-primary-600: #9d8554;
+  --color-primary-700: #866d44;
+  --color-primary-800: #6f5534;
+  --color-primary-900: #583d24;
+
+  /* Brand Colors - Navy (Primary Brand) */
+  --color-navy-50: #f0f2f5;
+  --color-navy-100: #e1e5eb;
+  --color-navy-200: #c3cbd7;
+  --color-navy-300: #a5b1c3;
+  --color-navy-400: #8797af;
+  --color-navy-500: #697d9b;
+  --color-navy-600: #5a6b85;
+  --color-navy-700: #4b596f;
+  --color-navy-800: #3c4759;
+  --color-navy-900: #2d3543;
+
+  /* Brand Colors - Secondary (Brown) */
+  --color-secondary-50: #f5f4f2;
+  --color-secondary-100: #ebe8e0;
+  --color-secondary-200: #d7d1c1;
+  --color-secondary-300: #c3baa2;
+  --color-secondary-400: #afa383;
+  --color-secondary-500: #9b8c64;
+  --color-secondary-600: #847554;
+  --color-secondary-700: #6d5e44;
+  --color-secondary-800: #564734;
+  --color-secondary-900: #3f3024;
+
+  /* Brand Colors - Terracotta (Accent) */
+  --color-terracotta-50: #f7f2f0;
+  --color-terracotta-100: #efe5e1;
+  --color-terracotta-200: #dfcbc3;
+  --color-terracotta-300: #cfb1a5;
+  --color-terracotta-400: #bf9787;
+  --color-terracotta-500: #af7d69;
+  --color-terracotta-600: #946a58;
+  --color-terracotta-700: #795747;
+  --color-terracotta-800: #5e4436;
+  --color-terracotta-900: #433125;
+
+  /* Brand Colors - Burgundy */
+  --color-burgundy-50: #f5f0f0;
+  --color-burgundy-100: #ebe1e1;
+  --color-burgundy-200: #d7c3c3;
+  --color-burgundy-300: #c3a5a5;
+  --color-burgundy-400: #af8787;
+  --color-burgundy-500: #9b6969;
+  --color-burgundy-600: #845a5a;
+  --color-burgundy-700: #6d4b4b;
+  --color-burgundy-800: #563c3c;
+  --color-burgundy-900: #3f2d2d;
+
+  /* Brand Colors - Teal */
+  --color-teal-50: #f0f7f5;
+  --color-teal-100: #e1efeb;
+  --color-teal-200: #c3dfd7;
+  --color-teal-300: #a5cfc3;
+  --color-teal-400: #87bfaf;
+  --color-teal-500: #69af9b;
+  --color-teal-600: #5a9484;
+  --color-teal-700: #4b796d;
+  --color-teal-800: #3c5e56;
+  --color-teal-900: #2d433f;
+
+  /* Brand Colors - Grey */
+  --color-grey-50: #f8f9fa;
+  --color-grey-100: #f1f3f4;
+  --color-grey-200: #e3e7ea;
+  --color-grey-300: #d5dbdf;
+  --color-grey-400: #c7cfd4;
+  --color-grey-500: #b9c3c9;
+  --color-grey-600: #9da5aa;
+  --color-grey-700: #81878b;
+  --color-grey-800: #65696c;
+  --color-grey-900: #494b4d;
+
+  /* Brand Colors - Charcoal */
+  --color-charcoal-50: #f5f5f5;
+  --color-charcoal-100: #ebebeb;
+  --color-charcoal-200: #d7d7d7;
+  --color-charcoal-300: #c3c3c3;
+  --color-charcoal-400: #afafaf;
+  --color-charcoal-500: #9b9b9b;
+  --color-charcoal-600: #838383;
+  --color-charcoal-700: #6b6b6b;
+  --color-charcoal-800: #535353;
+  --color-charcoal-900: #3b3b3b;
+
+  /* Brand Aliases */
+  --color-brand-primary: #2d3543;
+  --color-brand-secondary: #9b8c64;
+  --color-brand-accent: #af7d69;
+  --color-brand-light: #f8f6f0;
+  --color-brand-dark: #2d3543;
+
+  /* Typography */
+  --font-sans: "Frutiger Cn", Arial, sans-serif;
+  --font-mono: "Frutiger Cn", Arial, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Frutiger Cn Font Fallback */
+@font-face {
+  font-family: "Frutiger Cn";
+  src: local("Arial"), local("Helvetica"), local("sans-serif");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Frutiger Cn Bold";
+  src: local("Arial Bold"), local("Helvetica Bold"), local("sans-serif");
+  font-weight: 700;
+  font-style: normal;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Frutiger Cn", Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Brand-specific utility classes */
+.font-frutiger {
+  font-family: "Frutiger Cn", Arial, sans-serif;
+}
+
+.font-frutiger-bold {
+  font-family: "Frutiger Cn Bold", Arial, sans-serif;
+  font-weight: 700;
+}
+
+.font-arabic {
+  font-family: "Noto Sans Arabic", Arial, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2d3543;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1a202c;
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid #2d3543;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+* {
+  transition: color 0.2s ease, background-color 0.2s ease,
+    border-color 0.2s ease;
 }
