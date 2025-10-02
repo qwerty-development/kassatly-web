@@ -12,7 +12,7 @@ export const Header: React.FC = () => {
       className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b"
       style={{ borderColor: "var(--color-grey-200)" }}
     >
-      <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+      <div className="mx-auto max-w-7xl px-6 py-2 sm:py-4 flex items-center justify-between">
         {/* Logo */}
         <div
           className="text-2xl font-frutiger-bold tracking-tight"

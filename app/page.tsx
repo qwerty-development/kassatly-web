@@ -28,11 +28,13 @@ export default function Home() {
 
       {/* Main Content */}
       <Header />
-      <HeroSection />
-      <AboutSection />
-      <ProductsSection />
-      <VirtualToursSection />
-      <ContactSection />
+      <main>
+        <HeroSection />
+        <AboutSection />
+        <ProductsSection />
+        <VirtualToursSection />
+        <ContactSection />
+      </main>
       <Footer />
     </div>
   );
