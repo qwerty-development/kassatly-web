@@ -175,13 +175,16 @@ export const ContactSection: React.FC = () => {
                     type="email"
                     name="email"
                     value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-6 py-4 rounded-xl border-2 font-frutiger text-lg transition-all duration-300 focus:scale-[1.02] focus:shadow-lg"
-                    style={{ 
-                      borderColor: errors.email ? "var(--color-terracotta-400)" : "var(--color-terracotta-200)",
-                      backgroundColor: "white",
-                      color: "var(--color-charcoal-700)"
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl border transition-all duration-300 focus:outline-none focus:ring-2 font-frutiger text-sm sm:text-base"
+                    style={{
+                      borderColor: errors.email ? "var(--color-terracotta-400)" : "var(--color-grey-300)",
+                      backgroundColor: "var(--color-grey-50)",
+                      color: "var(--color-charcoal-700)",
+                      focusRingColor: "var(--color-brand-primary)"
                     }}
+                    placeholder="your.email@example.com"
+                    required
                   />
                   {errors.email && (
                     <p 
