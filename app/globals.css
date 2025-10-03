@@ -110,9 +110,19 @@
   --color-brand-light: #f8f6f0;
   --color-brand-dark: #2d3543;
 
-  /* Typography */
-  --font-sans: "Frutiger Cn", Arial, sans-serif;
-  --font-mono: "Frutiger Cn", Arial, sans-serif;
+  /* Semantic Color Aliases for easier component usage */
+  --color-text-primary: var(--color-brand-primary);
+  --color-text-secondary: var(--color-grey-600);
+  --color-text-muted: var(--color-grey-500);
+  --color-border: var(--color-grey-200);
+  --color-border-hover: var(--color-grey-300);
+  --color-surface: var(--color-grey-50);
+  --color-surface-hover: var(--color-grey-100);
+
+  /* Typography - NO FALLBACKS for testing */
+  --font-sans: var(--font-frutiger-cn);
+  --font-mono: var(--font-frutiger-cn);
+  --font-arabic: var(--font-noto-arabic);
 }
 
 /* Frutiger Cn Font Fallback */
@@ -133,23 +143,23 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Frutiger Cn", Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
   font-weight: 400;
   line-height: 1.6;
 }
 
 /* Brand-specific utility classes */
 .font-frutiger {
-  font-family: "Frutiger Cn", Arial, sans-serif;
+  font-family: var(--font-sans);
 }
 
 .font-frutiger-bold {
-  font-family: "Frutiger Cn Bold", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-weight: 700;
 }
 
 .font-arabic {
-  font-family: "Noto Sans Arabic", Arial, sans-serif;
+  font-family: var(--font-arabic);
 }
 
 /* Custom scrollbar */
