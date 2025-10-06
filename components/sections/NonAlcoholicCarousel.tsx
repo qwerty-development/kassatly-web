@@ -11,7 +11,10 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
   className = "",
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const products = NON_ALCOHOLIC_PRODUCTS;
 
@@ -21,7 +24,7 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
   useEffect(() => {
     const updateVisibleCount = () => {
       if (window.innerWidth < 640) {
-        setVisibleCount(1); // Mobile: 1 product
+        setVisibleCount(1); // Mobile: 1 product for better touch experience
       } else if (window.innerWidth < 1024) {
         setVisibleCount(2); // Tablet: 2 products
       } else {
@@ -34,33 +37,104 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
     return () => window.removeEventListener("resize", updateVisibleCount);
   }, []);
 
+  // Reset drag state when currentIndex changes
+  useEffect(() => {
+    setIsDragging(false);
+    setDragOffset(0);
+  }, [currentIndex]);
+
   const maxIndex = Math.max(0, products.length - visibleCount);
 
   const nextSlide = () => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
     setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-    setTimeout(() => setIsTransitioning(false), 300);
   };
 
   const prevSlide = () => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
-    setTimeout(() => setIsTransitioning(false), 300);
   };
 
   const goToSlide = (index: number) => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
     setCurrentIndex(index);
-    setTimeout(() => setIsTransitioning(false), 300);
+  };
+
+  // Enhanced touch event handlers for better mobile experience
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+    setIsDragging(true);
+    setDragOffset(0);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStart) return;
+
+    const currentTouch = e.targetTouches[0].clientX;
+    setTouchEnd(currentTouch);
+
+    // Calculate drag offset for visual feedback
+    const offset = currentTouch - touchStart;
+    setDragOffset(offset);
+
+    // Prevent default scrolling when swiping horizontally
+    if (Math.abs(offset) > 10) {
+      e.preventDefault();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) {
+      setIsDragging(false);
+      setDragOffset(0);
+      return;
+    }
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 30; // Reduced threshold for easier swiping
+    const isRightSwipe = distance < -30;
+
+    if (isLeftSwipe) {
+      nextSlide();
+    } else if (isRightSwipe) {
+      prevSlide();
+    }
+
+    // Reset states
+    setIsDragging(false);
+    setDragOffset(0);
+    setTouchStart(null);
+    setTouchEnd(null);
   };
 
   const progressPercentage = maxIndex > 0 ? (currentIndex / maxIndex) * 100 : 0;
 
   return (
     <div className={`w-full ${className}`}>
+      <style jsx>{`
+        .carousel-slider {
+          transition: transform 300ms ease-in-out !important;
+        }
+        .progress-bar {
+          transition: width 300ms ease-in-out !important;
+        }
+        .dot-indicator {
+          transition: all 300ms ease-in-out !important;
+        }
+        .carousel-container {
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior-x: contain;
+        }
+        .carousel-container:active {
+          cursor: grabbing;
+        }
+        .carousel-container:active .carousel-slider {
+          cursor: grabbing;
+        }
+        @media (max-width: 640px) {
+          .carousel-container {
+            padding: 0 8px;
+          }
+        }
+      `}</style>
       <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-12">
         {/* Left Side - Title Section */}
         <div className="lg:w-1/3 flex-shrink-0">
@@ -109,13 +183,27 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
         <div className="lg:w-2/3 flex-1">
           <div className="relative">
             {/* Carousel Container */}
-            <div ref={carouselRef} className="relative overflow-hidden">
+            <div
+              ref={carouselRef}
+              className="relative overflow-hidden touch-pan-x select-none carousel-container"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              style={{
+                touchAction: "pan-x",
+                WebkitUserSelect: "none",
+                userSelect: "none",
+              }}
+            >
               <div
-                className="flex"
+                className="flex carousel-slider"
                 style={{
-                  transform: `translateX(-${
+                  transform: `translateX(calc(-${
                     currentIndex * (100 / visibleCount)
-                  }%)`,
+                  }% + ${isDragging ? dragOffset * 0.3 : 0}px))`,
+                  transition: isDragging
+                    ? "none"
+                    : "transform 300ms ease-in-out",
                 }}
               >
                 {products.map((product, index) => (
@@ -136,7 +224,7 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
               <div className="flex-1 mr-4">
                 <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-teal-400 to-pink-400 rounded-full"
+                    className="h-full bg-gradient-to-r from-teal-400 to-pink-400 rounded-full progress-bar"
                     style={{ width: `${progressPercentage}%` }}
                   ></div>
                 </div>
@@ -146,8 +234,7 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
               <div className="flex items-center space-x-2">
                 <button
                   onClick={prevSlide}
-                  disabled={isTransitioning}
-                  className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-100 to-pink-100 border border-teal-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-100 to-pink-100 border border-teal-200 flex items-center justify-center"
                 >
                   <svg
                     className="w-5 h-5"
@@ -166,8 +253,7 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
 
                 <button
                   onClick={nextSlide}
-                  disabled={isTransitioning}
-                  className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-100 to-pink-100 border border-teal-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-100 to-pink-100 border border-teal-200 flex items-center justify-center"
                 >
                   <svg
                     className="w-5 h-5"
@@ -192,7 +278,7 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`w-2 h-2 rounded-full ${
+                  className={`w-2 h-2 rounded-full dot-indicator ${
                     index === currentIndex
                       ? "bg-gradient-to-r from-teal-400 to-pink-400 w-8"
                       : "bg-gray-300"
@@ -226,21 +312,21 @@ const ProductCarouselCard: React.FC<ProductCarouselCardProps> = ({
           <Image
             src={product.image}
             alt={`${product.name} product image`}
-            width={120}
-            height={120}
-            className="w-30 h-30 object-contain"
+            width={180}
+            height={180}
+            className="w-44 h-44 object-contain"
             onError={(e) => {
               // Fallback to emoji if image fails to load
               const target = e.target as HTMLImageElement;
               target.style.display = "none";
               const parent = target.parentElement;
               if (parent) {
-                parent.innerHTML = `<span class="text-4xl">${product.icon}</span>`;
+                parent.innerHTML = `<span class="text-5xl">${product.icon}</span>`;
               }
             }}
           />
         ) : (
-          <span className="text-4xl">{product.icon}</span>
+          <span className="text-5xl">{product.icon}</span>
         )}
       </div>
 
