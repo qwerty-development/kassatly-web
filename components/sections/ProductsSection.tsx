@@ -1,98 +1,129 @@
+// NEW: Import the 'motion' component from framer-motion
+import { motion } from "framer-motion";
 import React from "react";
-import { ProductCard } from "./ProductCard";
 import { ProductCarousel } from "./ProductCarousel";
 import {
   NON_ALCOHOLIC_PRODUCTS,
   ALCOHOLIC_PRODUCTS,
 } from "@/constants/products";
 
-/**
- * Enhanced Products section with premium design and sophisticated categorization
- * Features refined typography, elegant layouts, and brand-aligned visual storytelling
- */
+// NEW: Define reusable animation variants for a consistent feel
+const sectionVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: "easeOut" },
+  },
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
 export const ProductsSection: React.FC = () => {
   return (
     <section
       id="products"
       className="py-12 sm:py-16 lg:py-24 relative overflow-hidden bg-white"
     >
-      {/* Subtle background elements */}
       <div className="absolute inset-0 opacity-[0.015]">
         <div className="absolute inset-0 bg-[linear-gradient(45deg,var(--color-brand-primary)_1px,transparent_1px),linear-gradient(-45deg,var(--color-brand-primary)_1px,transparent_1px)] bg-[length:80px_80px]"></div>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 relative">
-        {/* Enhanced Section Header */}
-        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
-          {/* Section Badge */}
-          <div className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-gradient-to-r from-navy-50 to-beige-50 border border-navy-100 mb-6 sm:mb-8 transition-all duration-300 hover:scale-105 hover:shadow-md">
-            <div className="w-2 h-2 rounded-full bg-gradient-to-r from-terracotta-400 to-terracotta-500 mr-2 sm:mr-3 transition-all duration-300"></div>
-            <span
-              className="text-xs sm:text-sm font-frutiger-bold tracking-wider uppercase transition-all duration-300"
-              style={{ color: "var(--color-brand-primary)" }}
-            >
-              Product Portfolio
-            </span>
-          </div>
-
+        {/* MODIFIED: Wrapped in a motion component for staggered animations */}
+        <motion.div
+          className="text-center mb-12 sm:mb-16 lg:mb-20"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           {/* Main Title with Enhanced Typography */}
-          <h2 className="mb-4 sm:mb-6">
+          <motion.h2 className="mb-4 sm:mb-6" variants={itemVariants}>
             <span
-              className="block text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-frutiger-bold leading-[0.9] mb-1 sm:mb-2 transition-all duration-300"
+              className="block text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-frutiger-bold leading-[0.9] mb-1 sm:mb-2"
               style={{ color: "var(--color-brand-primary)" }}
             >
               Our Products
             </span>
             <span
-              className="block text-xl sm:text-2xl lg:text-3xl font-frutiger opacity-70 transition-all duration-300"
+              className="block text-xl sm:text-2xl lg:text-3xl font-frutiger opacity-70"
               style={{ color: "var(--color-charcoal-600)" }}
             >
               The Range
             </span>
-          </h2>
+          </motion.h2>
 
           {/* Enhanced Subtitle */}
-          <p
-            className="text-base sm:text-lg lg:text-xl font-frutiger leading-relaxed max-w-3xl mx-auto mb-6 sm:mb-8 transition-all duration-300"
+          <motion.p
+            className="text-base sm:text-lg lg:text-xl font-frutiger leading-relaxed max-w-3xl mx-auto mb-6 sm:mb-8"
             style={{ color: "var(--color-charcoal-600)" }}
+            variants={itemVariants} // NEW: Apply item animation
           >
             10 types of refreshments to quench every thirst
-          </p>
+          </motion.p>
 
           {/* Quality Indicators */}
-          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8 text-xs sm:text-sm font-frutiger">
-            <div className="flex items-center transition-all duration-300 hover:scale-105">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-terracotta-400 mr-1.5 sm:mr-2 transition-all duration-300"></div>
-              <span
-                style={{ color: "var(--color-charcoal-500)" }}
-                className="transition-all duration-300"
-              >
+          {/* MODIFIED: Wrapped items in motion components for staggered animation */}
+          <motion.div
+            className="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8 text-xs sm:text-sm font-frutiger"
+            variants={staggerContainer}
+          >
+            <motion.div
+              className="flex items-center transition-all duration-300 ease-in-out hover:scale-105"
+              variants={itemVariants}
+            >
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-terracotta-400 mr-1.5 sm:mr-2"></div>
+              <span style={{ color: "var(--color-charcoal-500)" }}>
                 Premium Quality
               </span>
-            </div>
-            <div className="flex items-center transition-all duration-300 hover:scale-105">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-terracotta-400 mr-1.5 sm:mr-2 transition-all duration-300"></div>
-              <span
-                style={{ color: "var(--color-charcoal-500)" }}
-                className="transition-all duration-300"
-              >
+            </motion.div>
+            <motion.div
+              className="flex items-center transition-all duration-300 ease-in-out hover:scale-105"
+              variants={itemVariants}
+            >
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-terracotta-400 mr-1.5 sm:mr-2"></div>
+              <span style={{ color: "var(--color-charcoal-500)" }}>
                 Global Distribution
               </span>
-            </div>
-            <div className="flex items-center transition-all duration-300 hover:scale-105">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-terracotta-400 mr-1.5 sm:mr-2 transition-all duration-300"></div>
-              <span
-                style={{ color: "var(--color-charcoal-500)" }}
-                className="transition-all duration-300"
-              >
+            </motion.div>
+            <motion.div
+              className="flex items-center transition-all duration-300 ease-in-out hover:scale-105"
+              variants={itemVariants}
+            >
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-terracotta-400 mr-1.5 sm:mr-2"></div>
+              <span style={{ color: "var(--color-charcoal-500)" }}>
                 Award-Winning
               </span>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
 
         {/* Non-Alcoholic Products Section - Carousel */}
-        <div className="mb-16 sm:mb-20 lg:mb-24">
+        {/* MODIFIED: Wrapped in motion component to animate as a block */}
+        <motion.div
+          className="mb-16 sm:mb-20 lg:mb-24"
+          variants={sectionVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
           <ProductCarousel
             products={NON_ALCOHOLIC_PRODUCTS}
             title="Refreshing"
@@ -100,19 +131,26 @@ export const ProductsSection: React.FC = () => {
             description="Discover our premium selection of non-alcoholic beverages, crafted with natural ingredients and traditional recipes."
             badgeText="Non-Alcoholic Range"
           />
-        </div>
+        </motion.div>
 
         {/* Divider Section */}
-        <div className="relative mb-16 sm:mb-20 lg:mb-24">
+        {/* MODIFIED: Wrapped in motion component to animate in */}
+        <motion.div
+          className="relative mb-16 sm:mb-20 lg:mb-24"
+          variants={sectionVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+        >
           <div className="absolute inset-0 flex items-center">
             <div
-              className="w-full border-t transition-all duration-300"
+              className="w-full border-t"
               style={{ borderColor: "var(--color-grey-200)" }}
             ></div>
           </div>
           <div className="relative flex justify-center">
             <div
-              className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full border transition-all duration-300 hover:scale-105 hover:shadow-md"
+              className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full border transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-md"
               style={{
                 backgroundColor: "white",
                 borderColor: "var(--color-grey-200)",
@@ -120,26 +158,33 @@ export const ProductsSection: React.FC = () => {
             >
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div
-                  className="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300"
+                  className="w-2 h-2 sm:w-3 sm:h-3 rounded-full"
                   style={{ backgroundColor: "var(--color-brand-primary)" }}
                 ></div>
                 <span
-                  className="font-frutiger-bold text-xs sm:text-sm tracking-wider uppercase transition-all duration-300"
+                  className="font-frutiger-bold text-xs sm:text-sm tracking-wider uppercase"
                   style={{ color: "var(--color-brand-primary)" }}
                 >
                   Premium Selection
                 </span>
                 <div
-                  className="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300"
+                  className="w-2 h-2 sm:w-3 sm:h-3 rounded-full"
                   style={{ backgroundColor: "var(--color-brand-primary)" }}
                 ></div>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Alcoholic Products Section - Carousel */}
-        <div className="mb-12 sm:mb-16 lg:mb-20">
+        {/* MODIFIED: Wrapped in motion component to animate as a block */}
+        <motion.div
+          className="mb-12 sm:mb-16 lg:mb-20"
+          variants={sectionVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
           <ProductCarousel
             products={ALCOHOLIC_PRODUCTS}
             title="Premium"
@@ -147,124 +192,96 @@ export const ProductsSection: React.FC = () => {
             description="Premium spirits, wines, and beers that showcase our commitment to excellence and innovation."
             badgeText="Alcoholic Range"
           />
-        </div>
+        </motion.div>
 
-        {/* Enhanced Call-to-Action Section */}
-        <div className="text-center">
-          <div className="relative group max-w-2xl mx-auto">
-            {/* Background glow effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-terracotta-400/20 via-navy-400/20 to-terracotta-400/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+        {/* --- REVAMPED & ANIMATED HERITAGE CTA SECTION --- */}
+        <motion.div
+          className="group relative rounded-2xl lg:rounded-3xl border border-navy-100/60 bg-gradient-to-br from-white via-beige-50/50 to-white p-1"
+          variants={sectionVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          {/* Glow effect on hover */}
+          {/* FIX: Ensured transition classes are present for a smooth opacity change */}
+          <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-terracotta-400/20 via-navy-400/20 to-terracotta-400/20 blur-xl opacity-0 transition-opacity duration-700 ease-in-out group-hover:opacity-60"></div>
 
-            {/* Main card */}
-            <div className="relative p-6 sm:p-8 lg:p-10 rounded-xl sm:rounded-2xl lg:rounded-3xl bg-gradient-to-br from-navy-50/80 via-white to-beige-50/80 border border-navy-100/50 backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl overflow-hidden">
-              {/* Decorative background pattern */}
-              <div className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-500">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,var(--color-terracotta-400)_1px,transparent_1px),radial-gradient(circle_at_70%_80%,var(--color-navy-400)_1px,transparent_1px)] bg-[length:60px_60px]"></div>
-              </div>
-
-              {/* Floating decorative elements */}
-              <div className="absolute top-3 right-3 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-terracotta-200/20 to-terracotta-300/20 rounded-full blur-xl animate-pulse"></div>
-              <div className="absolute bottom-3 left-3 w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-navy-200/20 to-navy-300/20 rounded-full blur-lg animate-pulse delay-1000"></div>
-
-              {/* Content */}
-              <div className="relative z-10">
-                {/* Premium badge */}
-                <div className="inline-flex items-center px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-3 rounded-full bg-gradient-to-r from-terracotta-100/80 to-navy-100/80 border border-terracotta-200/50 mb-4 sm:mb-6 lg:mb-8 transition-all duration-300 hover:scale-105">
-                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-r from-terracotta-400 to-navy-400 mr-2 sm:mr-3 animate-pulse"></div>
-                  <span
-                    className="text-xs sm:text-sm font-frutiger-bold tracking-wider uppercase"
-                    style={{ color: "var(--color-brand-primary)" }}
-                  >
-                    Heritage Experience
-                  </span>
-                </div>
-
-                {/* Enhanced title */}
-                <h4
-                  className="text-xl sm:text-2xl lg:text-3xl font-frutiger-bold mb-3 sm:mb-4 lg:mb-6 transition-all duration-300 group-hover:scale-[1.02]"
-                  style={{ color: "var(--color-brand-primary)" }}
+          <div className="relative grid grid-cols-1 lg:grid-cols-2 items-center gap-8 sm:gap-12 lg:gap-16 bg-white/80 backdrop-blur-sm rounded-xl lg:rounded-2xl p-8 sm:p-12 lg:p-16 overflow-hidden">
+            {/* Left Side: Content */}
+            <div className="text-center lg:text-left">
+              <h3
+                className="text-2xl sm:text-3xl lg:text-4xl font-frutiger-bold mb-4"
+                style={{ color: "var(--color-brand-primary)" }}
+              >
+                <span className="block opacity-70 font-frutiger text-lg sm:text-xl lg:text-2xl">
+                  Our Legacy
+                </span>
+                A Tradition of Taste
+              </h3>
+              <p
+                className="text-base sm:text-lg font-frutiger leading-relaxed max-w-md mx-auto lg:mx-0 mb-8"
+                style={{ color: "var(--color-charcoal-600)" }}
+              >
+                Explore over{" "}
+                <span className="font-frutiger-bold text-terracotta-600">
+                  50 years
+                </span>{" "}
+                of beverage excellence and discover the stories behind our
+                most celebrated creations.
+              </p>
+              <a
+                href="#tours"
+                className="group/btn relative inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 rounded-full font-frutiger-bold text-sm sm:text-base tracking-wide transition-all duration-300 ease-in-out hover:scale-105 shadow-lg hover:shadow-xl min-h-[44px] sm:min-h-[52px] overflow-hidden"
+                style={{
+                  color: "white",
+                  backgroundColor: "var(--color-brand-primary)",
+                }}
+              >
+                <div className="absolute inset-0 bg-white/20 -translate-x-full transition-transform duration-500 ease-in-out group-hover/btn:translate-x-0"></div>
+                
+                {/* --- ICON CHANGE & ANIMATION --- */}
+                {/* MODIFIED: Replaced clock icon with an animated down-arrow */}
+                <svg
+                  className="relative w-5 h-5 sm:w-6 sm:h-6 mr-3 transition-transform duration-300 ease-in-out group-hover/btn:scale-110 animate-bounce"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <span className="block mb-1">Discover Our</span>
-                  <span className="block bg-gradient-to-r from-terracotta-500 to-navy-600 bg-clip-text text-transparent">
-                    Heritage
-                  </span>
-                </h4>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+                
+                <span className="relative">Explore Our Heritage</span>
+              </a>
+            </div>
 
-                {/* Enhanced description */}
-                <p
-                  className="text-sm sm:text-base lg:text-lg font-frutiger mb-4 sm:mb-6 lg:mb-8 max-w-xl mx-auto leading-relaxed transition-all duration-300"
-                  style={{ color: "var(--color-charcoal-600)" }}
-                >
-                  Experience{" "}
-                  <span className="font-frutiger-bold text-terracotta-600">
-                    50+ years
-                  </span>{" "}
-                  of beverage excellence through our immersive virtual tours
-                </p>
-
-                {/* Enhanced CTA button */}
-                <a
-                  href="#tours"
-                  className="group/btn relative inline-flex items-center px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 rounded-full border-2 font-frutiger-bold text-sm sm:text-base lg:text-lg tracking-wide transition-all duration-500 hover:scale-105 hover:shadow-2xl min-h-[44px] sm:min-h-[48px] lg:min-h-[56px] overflow-hidden"
-                  style={{
-                    borderColor: "var(--color-brand-primary)",
-                    color: "var(--color-brand-primary)",
-                    background:
-                      "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))",
-                  }}
-                >
-                  {/* Button shine effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000"></div>
-
-                  {/* Button content */}
-                  <div className="relative flex items-center">
-                    <svg
-                      className="mr-2 sm:mr-3 lg:mr-4 w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 group-hover/btn:scale-110 transition-all duration-300"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
-                    <span className="transition-all duration-300">
-                      Virtual Tours
-                    </span>
-                    <svg
-                      className="ml-2 sm:ml-3 lg:ml-4 w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 group-hover/btn:translate-x-1 transition-all duration-300"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </div>
-                </a>
-
-                {/* Additional visual elements */}
-                <div className="flex justify-center mt-4 sm:mt-6 lg:mt-8 space-x-2 opacity-60 group-hover:opacity-80 transition-opacity duration-300">
-                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-terracotta-400 animate-pulse"></div>
-                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-navy-400 animate-pulse delay-300"></div>
-                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-terracotta-400 animate-pulse delay-700"></div>
-                </div>
-              </div>
+            {/* Right Side: Abstract Visual */}
+            <div className="relative w-full h-64 lg:h-full min-h-[250px] flex items-center justify-center">
+              {/* FIX: Ensured transition classes are present on all shapes for smooth hover effects */}
+              <div
+                className="absolute w-40 h-40 sm:w-56 sm:h-56 rounded-full bg-gradient-to-br from-terracotta-400 to-terracotta-200 opacity-50 blur-3xl transition-all duration-1000 ease-in-out group-hover:scale-110 group-hover:opacity-70"
+                style={{ top: "10%", left: "15%" }}
+              ></div>
+              <div
+                className="absolute w-36 h-36 sm:w-48 sm:h-48 rounded-full bg-gradient-to-br from-navy-400 to-navy-200 opacity-40 blur-3xl transition-all duration-1000 ease-in-out delay-200 group-hover:-translate-x-4 group-hover:translate-y-4 group-hover:opacity-60"
+                style={{ bottom: "10%", right: "15%" }}
+              ></div>
+              <div
+                className="absolute w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-beige-300 to-white opacity-60 blur-2xl transition-all duration-1000 ease-in-out delay-300 group-hover:scale-125 group-hover:opacity-80"
+                style={{ top: "30%", right: "35%" }}
+              ></div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Floating decorative elements */}
-      <div className="absolute top-1/4 right-4 sm:right-8 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-terracotta-200/10 to-terracotta-300/10 blur-xl animate-pulse transition-all duration-300"></div>
-      <div className="absolute bottom-1/4 left-4 sm:left-8 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-navy-200/10 to-navy-300/10 blur-xl animate-pulse delay-1000 transition-all duration-300"></div>
+      <div className="absolute top-1/4 right-4 sm:right-8 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-terracotta-200/10 to-terracotta-300/10 blur-xl animate-pulse"></div>
+      <div className="absolute bottom-1/4 left-4 sm:left-8 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-navy-200/10 to-navy-300/10 blur-xl animate-pulse delay-1000"></div>
     </section>
   );
 };

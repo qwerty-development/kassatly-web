@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
+// ERROR FIX: Removed the import for "next/image" as it's specific to the Next.js framework
+// and was causing a compilation error in this environment.
+// import Image from "next/image";
 import { Product } from "@/types";
 
 interface ProductCarouselProps {
@@ -225,8 +227,12 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
               </div>
             </div>
 
-            {/* Carousel Controls */}
-            <div className="flex items-center justify-between mt-6">
+            {/* MODIFICATION: 
+              The entire controls container is now hidden by default and only becomes a 'flex' container
+              on screens 640px (the 'sm' breakpoint) and wider. This hides the progress bar and
+              arrow buttons on mobile, as requested.
+            */}
+            <div className="hidden sm:flex items-center justify-between mt-6">
               {/* Progress Line */}
               <div className="flex-1 mr-4">
                 <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
@@ -266,7 +272,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
                     className="w-5 h-5"
                     fill="none"
                     stroke="currentColor"
-                    viewBox="0 0 24 24"
+                    viewBox="0 0 24"
                   >
                     <path
                       strokeLinecap="round"
@@ -279,7 +285,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
               </div>
             </div>
 
-            {/* Dots Indicator */}
+            {/* Dots Indicator (This remains visible on all screen sizes) */}
             <div className="flex justify-center mt-4 space-x-2">
               {Array.from({ length: maxIndex + 1 }).map((_, index) => (
                 <button
@@ -320,11 +326,11 @@ const ProductCarouselCard: React.FC<ProductCarouselCardProps> = ({
         {/* Product Image/Icon */}
         <div className="relative z-10">
           {product.image ? (
-            <Image
+            // ERROR FIX: Replaced Next.js <Image> with a standard <img> tag to resolve the dependency error.
+            // The functionality, including styling and the onError fallback, is preserved.
+            <img
               src={product.image}
               alt={`${product.name} product image`}
-              width={180}
-              height={180}
               className="w-44 h-44 object-contain"
               onError={(e) => {
                 // Fallback to emoji if image fails to load
@@ -375,3 +381,4 @@ const ProductCarouselCard: React.FC<ProductCarouselCardProps> = ({
     </div>
   );
 };
+
