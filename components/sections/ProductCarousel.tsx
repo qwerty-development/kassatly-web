@@ -1,13 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { NON_ALCOHOLIC_PRODUCTS } from "@/constants/products";
 import { Product } from "@/types";
 
-interface NonAlcoholicCarouselProps {
+interface ProductCarouselProps {
+  products: Product[];
+  title: string;
+  subtitle: string;
+  description: string;
+  badgeText: string;
   className?: string;
 }
 
-export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
+export const ProductCarousel: React.FC<ProductCarouselProps> = ({
+  products,
+  title,
+  subtitle,
+  description,
+  badgeText,
   className = "",
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -16,7 +25,6 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const products = NON_ALCOHOLIC_PRODUCTS;
 
   // Calculate how many products to show based on screen size
   const [visibleCount, setVisibleCount] = useState(3);
@@ -146,7 +154,7 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
                 className="text-sm font-frutiger-bold tracking-wider uppercase"
                 style={{ color: "var(--color-brand-primary)" }}
               >
-                Non-Alcoholic Range
+                {badgeText}
               </span>
             </div>
 
@@ -155,9 +163,9 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
               className="text-2xl lg:text-3xl xl:text-4xl font-frutiger-bold mb-4 leading-tight"
               style={{ color: "var(--color-brand-primary)" }}
             >
-              Refreshing
+              {title}
               <br />
-              <span className="opacity-70">Beverages</span>
+              <span className="opacity-70">{subtitle}</span>
             </h3>
 
             {/* Description */}
@@ -165,8 +173,7 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
               className="text-base lg:text-lg font-frutiger leading-relaxed mb-6"
               style={{ color: "var(--color-charcoal-600)" }}
             >
-              Discover our premium selection of non-alcoholic beverages, crafted
-              with natural ingredients and traditional recipes.
+              {description}
             </p>
 
             {/* Product Count */}

@@ -1,6 +1,6 @@
 import React from "react";
 import { ProductCard } from "./ProductCard";
-import { NonAlcoholicCarousel } from "./NonAlcoholicCarousel";
+import { ProductCarousel } from "./ProductCarousel";
 import {
   NON_ALCOHOLIC_PRODUCTS,
   ALCOHOLIC_PRODUCTS,
@@ -93,7 +93,13 @@ export const ProductsSection: React.FC = () => {
 
         {/* Non-Alcoholic Products Section - Carousel */}
         <div className="mb-16 sm:mb-20 lg:mb-24">
-          <NonAlcoholicCarousel />
+          <ProductCarousel
+            products={NON_ALCOHOLIC_PRODUCTS}
+            title="Refreshing"
+            subtitle="Beverages"
+            description="Discover our premium selection of non-alcoholic beverages, crafted with natural ingredients and traditional recipes."
+            badgeText="Non-Alcoholic Range"
+          />
         </div>
 
         {/* Divider Section */}
@@ -132,49 +138,15 @@ export const ProductsSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Alcoholic Products Section */}
+        {/* Alcoholic Products Section - Carousel */}
         <div className="mb-12 sm:mb-16 lg:mb-20">
-          {/* Category Header */}
-          <div className="text-center mb-10 sm:mb-12 lg:mb-16">
-            <div className="relative inline-block transition-all duration-300 hover:scale-105">
-              <h3
-                className="text-2xl sm:text-3xl lg:text-4xl font-frutiger-bold mb-3 sm:mb-4 relative z-10 transition-all duration-300"
-                style={{ color: "var(--color-brand-primary)" }}
-              >
-                Alcoholic Range
-              </h3>
-              {/* Decorative underline */}
-              <div
-                className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 sm:w-20 lg:w-24 h-0.5 sm:h-1 rounded-full transition-all duration-300"
-                style={{ backgroundColor: "var(--color-brand-accent)" }}
-              ></div>
-            </div>
-            <p
-              className="text-sm sm:text-base lg:text-lg font-frutiger mt-4 sm:mt-6 max-w-2xl mx-auto transition-all duration-300"
-              style={{ color: "var(--color-charcoal-600)" }}
-            >
-              Premium spirits, wines, and beers that showcase our commitment to
-              excellence and innovation
-            </p>
-          </div>
-
-          {/* Enhanced Product Grid - Mobile Optimized */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 auto-rows-fr">
-            {ALCOHOLIC_PRODUCTS.map((product, index) => (
-              <div
-                key={product.id}
-                className="opacity-0 animate-fadeInUp transition-all duration-300"
-                style={{
-                  animationDelay: `${
-                    (index + NON_ALCOHOLIC_PRODUCTS.length) * 100
-                  }ms`,
-                  animationFillMode: "forwards",
-                }}
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
-          </div>
+          <ProductCarousel
+            products={ALCOHOLIC_PRODUCTS}
+            title="Premium"
+            subtitle="Spirits"
+            description="Premium spirits, wines, and beers that showcase our commitment to excellence and innovation."
+            badgeText="Alcoholic Range"
+          />
         </div>
 
         {/* Enhanced Call-to-Action Section */}
