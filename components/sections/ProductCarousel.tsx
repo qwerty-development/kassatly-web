@@ -310,31 +310,36 @@ const ProductCarouselCard: React.FC<ProductCarouselCardProps> = ({
 }) => {
   return (
     <div className="h-full flex flex-col">
-      {/* Product Image Container - Fixed square size with background color */}
-      <div
-        className="relative w-full h-64 flex items-center justify-center p-8"
-        style={{ backgroundColor: product.color }}
-      >
-        {product.image ? (
-          <Image
-            src={product.image}
-            alt={`${product.name} product image`}
-            width={180}
-            height={180}
-            className="w-44 h-44 object-contain"
-            onError={(e) => {
-              // Fallback to emoji if image fails to load
-              const target = e.target as HTMLImageElement;
-              target.style.display = "none";
-              const parent = target.parentElement;
-              if (parent) {
-                parent.innerHTML = `<span class="text-5xl">${product.icon}</span>`;
-              }
-            }}
-          />
-        ) : (
-          <span className="text-5xl">{product.icon}</span>
-        )}
+      {/* Product Image Container - Fixed square size with Heritage card background */}
+      <div className="relative w-full h-64 flex items-center justify-center p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl bg-gradient-to-br from-navy-50/80 via-white to-beige-50/80 border border-navy-100/50 backdrop-blur-sm overflow-hidden">
+        {/* Decorative background pattern - same as Heritage card */}
+        <div className="absolute inset-0 opacity-[0.03]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,var(--color-terracotta-400)_1px,transparent_1px),radial-gradient(circle_at_70%_80%,var(--color-navy-400)_1px,transparent_1px)] bg-[length:60px_60px]"></div>
+        </div>
+
+        {/* Product Image/Icon */}
+        <div className="relative z-10">
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={`${product.name} product image`}
+              width={180}
+              height={180}
+              className="w-44 h-44 object-contain"
+              onError={(e) => {
+                // Fallback to emoji if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = "none";
+                const parent = target.parentElement;
+                if (parent) {
+                  parent.innerHTML = `<span class="text-5xl">${product.icon}</span>`;
+                }
+              }}
+            />
+          ) : (
+            <span className="text-5xl">{product.icon}</span>
+          )}
+        </div>
       </div>
 
       {/* Product Details - Outside the image container */}
