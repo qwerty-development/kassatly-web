@@ -1,13 +1,11 @@
-// NEW: Import the 'motion' component from framer-motion
-import { motion } from "framer-motion";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ProductCarousel } from "./ProductCarousel";
 import {
   NON_ALCOHOLIC_PRODUCTS,
   ALCOHOLIC_PRODUCTS,
 } from "@/constants/products";
 
-// NEW: Define reusable animation variants for a consistent feel
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: {
@@ -35,7 +33,28 @@ const itemVariants = {
   },
 };
 
+const heritageImages = [
+  "/images/group-shots/buzz-group.png",
+  "/images/group-shots/chateau-ka-group-2.png",
+  "/images/group-shots/chateau-ka-group.png",
+  "/images/group-shots/freez-group.png",
+  "/images/group-shots/liqueur-group.png",
+  "/images/group-shots/syrups-group.png",
+];
+
 export const ProductsSection: React.FC = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentImageIndex(
+        (prevIndex) => (prevIndex + 1) % heritageImages.length
+      );
+    }, 3500); // Image changes every 3.5 seconds
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <section
       id="products"
@@ -46,7 +65,6 @@ export const ProductsSection: React.FC = () => {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 relative">
-        {/* MODIFIED: Wrapped in a motion component for staggered animations */}
         <motion.div
           className="text-center mb-12 sm:mb-16 lg:mb-20"
           variants={staggerContainer}
@@ -54,7 +72,6 @@ export const ProductsSection: React.FC = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          {/* Main Title with Enhanced Typography */}
           <motion.h2 className="mb-4 sm:mb-6" variants={itemVariants}>
             <span
               className="block text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-frutiger-bold leading-[0.9] mb-1 sm:mb-2"
@@ -70,17 +87,14 @@ export const ProductsSection: React.FC = () => {
             </span>
           </motion.h2>
 
-          {/* Enhanced Subtitle */}
           <motion.p
             className="text-base sm:text-lg lg:text-xl font-frutiger leading-relaxed max-w-3xl mx-auto mb-6 sm:mb-8"
             style={{ color: "var(--color-charcoal-600)" }}
-            variants={itemVariants} // NEW: Apply item animation
+            variants={itemVariants}
           >
             10 types of refreshments to quench every thirst
           </motion.p>
 
-          {/* Quality Indicators */}
-          {/* MODIFIED: Wrapped items in motion components for staggered animation */}
           <motion.div
             className="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8 text-xs sm:text-sm font-frutiger"
             variants={staggerContainer}
@@ -115,8 +129,6 @@ export const ProductsSection: React.FC = () => {
           </motion.div>
         </motion.div>
 
-        {/* Non-Alcoholic Products Section - Carousel */}
-        {/* MODIFIED: Wrapped in motion component to animate as a block */}
         <motion.div
           className="mb-16 sm:mb-20 lg:mb-24"
           variants={sectionVariants}
@@ -133,8 +145,6 @@ export const ProductsSection: React.FC = () => {
           />
         </motion.div>
 
-        {/* Divider Section */}
-        {/* MODIFIED: Wrapped in motion component to animate in */}
         <motion.div
           className="relative mb-16 sm:mb-20 lg:mb-24"
           variants={sectionVariants}
@@ -176,8 +186,6 @@ export const ProductsSection: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Alcoholic Products Section - Carousel */}
-        {/* MODIFIED: Wrapped in motion component to animate as a block */}
         <motion.div
           className="mb-12 sm:mb-16 lg:mb-20"
           variants={sectionVariants}
@@ -194,7 +202,6 @@ export const ProductsSection: React.FC = () => {
           />
         </motion.div>
 
-        {/* --- REVAMPED & ANIMATED HERITAGE CTA SECTION --- */}
         <motion.div
           className="group relative rounded-2xl lg:rounded-3xl border border-navy-100/60 bg-gradient-to-br from-white via-beige-50/50 to-white p-1"
           variants={sectionVariants}
@@ -202,12 +209,9 @@ export const ProductsSection: React.FC = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          {/* Glow effect on hover */}
-          {/* FIX: Ensured transition classes are present for a smooth opacity change */}
           <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-terracotta-400/20 via-navy-400/20 to-terracotta-400/20 blur-xl opacity-0 transition-opacity duration-700 ease-in-out group-hover:opacity-60"></div>
 
           <div className="relative grid grid-cols-1 lg:grid-cols-2 items-center gap-8 sm:gap-12 lg:gap-16 bg-white/80 backdrop-blur-sm rounded-xl lg:rounded-2xl p-8 sm:p-12 lg:p-16 overflow-hidden">
-            {/* Left Side: Content */}
             <div className="text-center lg:text-left">
               <h3
                 className="text-2xl sm:text-3xl lg:text-4xl font-frutiger-bold mb-4"
@@ -238,9 +242,6 @@ export const ProductsSection: React.FC = () => {
                 }}
               >
                 <div className="absolute inset-0 bg-white/20 -translate-x-full transition-transform duration-500 ease-in-out group-hover/btn:translate-x-0"></div>
-                
-                {/* --- ICON CHANGE & ANIMATION --- */}
-                {/* MODIFIED: Replaced clock icon with an animated down-arrow */}
                 <svg
                   className="relative w-5 h-5 sm:w-6 sm:h-6 mr-3 transition-transform duration-300 ease-in-out group-hover/btn:scale-110 animate-bounce"
                   fill="none"
@@ -255,26 +256,24 @@ export const ProductsSection: React.FC = () => {
                     d="M19 9l-7 7-7-7"
                   ></path>
                 </svg>
-                
                 <span className="relative">Explore Our Heritage</span>
               </a>
             </div>
 
-            {/* Right Side: Abstract Visual */}
-            <div className="relative w-full h-64 lg:h-full min-h-[250px] flex items-center justify-center">
-              {/* FIX: Ensured transition classes are present on all shapes for smooth hover effects */}
-              <div
-                className="absolute w-40 h-40 sm:w-56 sm:h-56 rounded-full bg-gradient-to-br from-terracotta-400 to-terracotta-200 opacity-50 blur-3xl transition-all duration-1000 ease-in-out group-hover:scale-110 group-hover:opacity-70"
-                style={{ top: "10%", left: "15%" }}
-              ></div>
-              <div
-                className="absolute w-36 h-36 sm:w-48 sm:h-48 rounded-full bg-gradient-to-br from-navy-400 to-navy-200 opacity-40 blur-3xl transition-all duration-1000 ease-in-out delay-200 group-hover:-translate-x-4 group-hover:translate-y-4 group-hover:opacity-60"
-                style={{ bottom: "10%", right: "15%" }}
-              ></div>
-              <div
-                className="absolute w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-beige-300 to-white opacity-60 blur-2xl transition-all duration-1000 ease-in-out delay-300 group-hover:scale-125 group-hover:opacity-80"
-                style={{ top: "30%", right: "35%" }}
-              ></div>
+            <div className="relative w-full h-64 lg:h-full min-h-[250px] rounded-lg overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-tr from-black/5 via-transparent to-black/5 z-10"></div>
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={currentImageIndex}
+                  src={heritageImages[currentImageIndex]}
+                  alt="Showcased beverage group shot"
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  className="absolute inset-0 w-full h-full object-contain p-4"
+                />
+              </AnimatePresence>
             </div>
           </div>
         </motion.div>
