@@ -109,12 +109,9 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
         <div className="lg:w-2/3 flex-1">
           <div className="relative">
             {/* Carousel Container */}
-            <div
-              ref={carouselRef}
-              className="relative overflow-hidden rounded-2xl"
-            >
+            <div ref={carouselRef} className="relative overflow-hidden">
               <div
-                className="flex transition-transform duration-300 ease-in-out"
+                className="flex"
                 style={{
                   transform: `translateX(-${
                     currentIndex * (100 / visibleCount)
@@ -139,7 +136,7 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
               <div className="flex-1 mr-4">
                 <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-teal-400 to-pink-400 rounded-full transition-all duration-300"
+                    className="h-full bg-gradient-to-r from-teal-400 to-pink-400 rounded-full"
                     style={{ width: `${progressPercentage}%` }}
                   ></div>
                 </div>
@@ -150,7 +147,7 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
                 <button
                   onClick={prevSlide}
                   disabled={isTransitioning}
-                  className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-100 to-pink-100 border border-teal-200 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-100 to-pink-100 border border-teal-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
                     className="w-5 h-5"
@@ -170,7 +167,7 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
                 <button
                   onClick={nextSlide}
                   disabled={isTransitioning}
-                  className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-100 to-pink-100 border border-teal-200 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-100 to-pink-100 border border-teal-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
                     className="w-5 h-5"
@@ -195,10 +192,10 @@ export const NonAlcoholicCarousel: React.FC<NonAlcoholicCarouselProps> = ({
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  className={`w-2 h-2 rounded-full ${
                     index === currentIndex
                       ? "bg-gradient-to-r from-teal-400 to-pink-400 w-8"
-                      : "bg-gray-300 hover:bg-gray-400"
+                      : "bg-gray-300"
                   }`}
                 />
               ))}
@@ -219,75 +216,64 @@ const ProductCarouselCard: React.FC<ProductCarouselCardProps> = ({
   product,
 }) => {
   return (
-    <div className="group h-full transition-all duration-300 hover:scale-[1.02]">
-      <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden h-full flex flex-col">
-        {/* Product Image Container - Square with background color */}
-        <div
-          className="relative w-full aspect-square flex items-center justify-center p-6"
-          style={{ backgroundColor: product.color }}
+    <div className="h-full flex flex-col">
+      {/* Product Image Container - Fixed square size with background color */}
+      <div
+        className="relative w-full h-64 flex items-center justify-center p-8"
+        style={{ backgroundColor: product.color }}
+      >
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={`${product.name} product image`}
+            width={120}
+            height={120}
+            className="w-30 h-30 object-contain"
+            onError={(e) => {
+              // Fallback to emoji if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = "none";
+              const parent = target.parentElement;
+              if (parent) {
+                parent.innerHTML = `<span class="text-4xl">${product.icon}</span>`;
+              }
+            }}
+          />
+        ) : (
+          <span className="text-4xl">{product.icon}</span>
+        )}
+      </div>
+
+      {/* Product Details - Outside the image container */}
+      <div className="mt-6 flex-grow flex flex-col">
+        <h4
+          className="text-xl font-frutiger-bold mb-3 leading-tight"
+          style={{ color: "var(--color-brand-primary)" }}
         >
-          {product.image ? (
-            <Image
-              src={product.image}
-              alt={`${product.name} product image`}
-              width={200}
-              height={200}
-              className="w-full h-full object-contain transition-all duration-300 group-hover:scale-110"
-              onError={(e) => {
-                // Fallback to emoji if image fails to load
-                const target = e.target as HTMLImageElement;
-                target.style.display = "none";
-                const parent = target.parentElement;
-                if (parent) {
-                  parent.innerHTML = `<span class="text-6xl transition-all duration-300 group-hover:scale-110">${product.icon}</span>`;
-                }
-              }}
-            />
-          ) : (
-            <span className="text-6xl transition-all duration-300 group-hover:scale-110">
-              {product.icon}
-            </span>
-          )}
-        </div>
+          {product.name}
+        </h4>
 
-        {/* Product Details */}
-        <div className="p-6 flex-grow flex flex-col">
-          <h4
-            className="text-xl font-frutiger-bold mb-3 transition-all duration-300 group-hover:opacity-90 leading-tight"
-            style={{ color: "var(--color-brand-primary)" }}
+        <p
+          className="font-frutiger text-sm mb-4 flex-grow leading-relaxed"
+          style={{ color: "var(--color-charcoal-600)" }}
+        >
+          {product.description}
+        </p>
+
+        {/* Launch year at bottom */}
+        <div className="mt-auto">
+          <div
+            className="text-xs font-frutiger-bold"
+            style={{ color: "var(--color-brand-accent)" }}
           >
-            {product.name}
-          </h4>
-
-          <p
-            className="font-frutiger text-sm mb-4 flex-grow transition-all duration-300 group-hover:opacity-80 leading-relaxed"
-            style={{ color: "var(--color-charcoal-600)" }}
-          >
-            {product.description}
-          </p>
-
-          {/* Launch year at bottom */}
-          <div className="mt-auto">
-            <div
-              className="text-xs font-frutiger-bold transition-all duration-300 group-hover:opacity-80"
-              style={{ color: "var(--color-brand-accent)" }}
-            >
-              {product.launchYear === "Traditional" ||
-              product.launchYear === "Popular" ||
-              product.launchYear === "Premium"
-                ? product.launchYear
-                : `Launched ${product.launchYear}`}
-            </div>
-
-            {/* Hover indicator line */}
-            <div
-              className="w-0 h-0.5 mt-2 rounded-full transition-all duration-300 group-hover:w-8"
-              style={{ backgroundColor: "var(--color-brand-accent)" }}
-            ></div>
+            {product.launchYear === "Traditional" ||
+            product.launchYear === "Popular" ||
+            product.launchYear === "Premium"
+              ? product.launchYear
+              : `Launched ${product.launchYear}`}
           </div>
         </div>
       </div>
     </div>
   );
 };
-
