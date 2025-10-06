@@ -16,7 +16,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <Card className="p-4 sm:p-6 lg:p-8 h-full flex flex-col transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
         {/* Product Icon */}
         <div
-          className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full mb-4 sm:mb-5 lg:mb-6 flex items-center justify-center transition-all duration-300 group-hover:scale-110 overflow-hidden"
+          className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full mb-4 sm:mb-5 lg:mb-6 flex items-center justify-center transition-all p-2  duration-300 group-hover:scale-110 overflow-hidden"
           style={{ backgroundColor: product.color }}
         >
           {product.image ? (
