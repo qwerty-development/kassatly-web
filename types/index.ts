@@ -5,7 +5,8 @@ export interface Product {
   description: string;
   category: "non-alcoholic" | "alcoholic";
   launchYear: string;
-  icon: string;
+  icon: string; // Keep for backward compatibility, but will be used as fallback
+  image: string; // Path to PNG image
   color: string;
   features: string[];
 }
