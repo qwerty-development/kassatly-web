@@ -1,7 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-// ERROR FIX: Removed the import for "next/image" as it's specific to the Next.js framework
-// and was causing a compilation error in this environment.
-// import Image from "next/image";
 import { Product } from "@/types";
 
 interface ProductCarouselProps {
@@ -28,17 +25,16 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
   const [dragOffset, setDragOffset] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  // Calculate how many products to show based on screen size
   const [visibleCount, setVisibleCount] = useState(3);
 
   useEffect(() => {
     const updateVisibleCount = () => {
       if (window.innerWidth < 640) {
-        setVisibleCount(1); // Mobile: 1 product for better touch experience
+        setVisibleCount(1);
       } else if (window.innerWidth < 1024) {
-        setVisibleCount(2); // Tablet: 2 products
+        setVisibleCount(2);
       } else {
-        setVisibleCount(3); // Desktop: 3 products
+        setVisibleCount(3);
       }
     };
 
@@ -47,7 +43,6 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
     return () => window.removeEventListener("resize", updateVisibleCount);
   }, []);
 
-  // Reset drag state when currentIndex changes
   useEffect(() => {
     setIsDragging(false);
     setDragOffset(0);
@@ -67,7 +62,6 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
     setCurrentIndex(index);
   };
 
-  // Enhanced touch event handlers for better mobile experience
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
@@ -81,11 +75,9 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
     const currentTouch = e.targetTouches[0].clientX;
     setTouchEnd(currentTouch);
 
-    // Calculate drag offset for visual feedback
     const offset = currentTouch - touchStart;
     setDragOffset(offset);
 
-    // Prevent default scrolling when swiping horizontally
     if (Math.abs(offset) > 10) {
       e.preventDefault();
     }
@@ -99,7 +91,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
     }
 
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 30; // Reduced threshold for easier swiping
+    const isLeftSwipe = distance > 30;
     const isRightSwipe = distance < -30;
 
     if (isLeftSwipe) {
@@ -108,7 +100,6 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
       prevSlide();
     }
 
-    // Reset states
     setIsDragging(false);
     setDragOffset(0);
     setTouchStart(null);
@@ -145,53 +136,37 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
           }
         }
       `}</style>
-      <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-12">
-        {/* Left Side - Title Section */}
-        <div className="lg:w-1/3 flex-shrink-0">
-          <div className="mb-6">
-            {/* Section Badge */}
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-teal-50 to-pink-50 border border-teal-100 mb-4">
-              <div className="w-2 h-2 rounded-full bg-gradient-to-r from-teal-400 to-pink-400 mr-3"></div>
-              <span
-                className="text-sm font-frutiger-bold tracking-wider uppercase"
-                style={{ color: "var(--color-brand-primary)" }}
-              >
-                {badgeText}
-              </span>
-            </div>
-
-            {/* Main Title */}
-            <h3
-              className="text-2xl lg:text-3xl xl:text-4xl font-frutiger-bold mb-4 leading-tight"
+      <div className="flex flex-col gap-8">
+        {/* Title Section */}
+        <div className="text-center">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-teal-50 to-pink-50 border border-teal-100 mb-4">
+            <div className="w-2 h-2 rounded-full bg-gradient-to-r from-teal-400 to-pink-400 mr-3"></div>
+            <span
+              className="text-sm font-frutiger-bold tracking-wider uppercase"
               style={{ color: "var(--color-brand-primary)" }}
             >
-              {title}
-              <br />
-              <span className="opacity-70">{subtitle}</span>
-            </h3>
-
-            {/* Description */}
-            <p
-              className="text-base lg:text-lg font-frutiger leading-relaxed mb-6"
-              style={{ color: "var(--color-charcoal-600)" }}
-            >
-              {description}
-            </p>
-
-            {/* Product Count */}
-            <div className="flex items-center text-sm font-frutiger">
-              <div className="w-1.5 h-1.5 rounded-full bg-teal-400 mr-2"></div>
-              <span style={{ color: "var(--color-charcoal-500)" }}>
-                {products.length} Products Available
-              </span>
-            </div>
+              {badgeText}
+            </span>
           </div>
+
+          <h3
+            className="text-2xl lg:text-3xl xl:text-4xl font-frutiger-bold mb-4 leading-tight"
+            style={{ color: "var(--color-brand-primary)" }}
+          >
+            {title} <span className="opacity-70">{subtitle}</span>
+          </h3>
+
+          <p
+            className="text-base lg:text-lg font-frutiger leading-relaxed max-w-2xl mx-auto"
+            style={{ color: "var(--color-charcoal-600)" }}
+          >
+            {description}
+          </p>
         </div>
 
-        {/* Right Side - Carousel */}
-        <div className="lg:w-2/3 flex-1">
+        {/* Carousel */}
+        <div>
           <div className="relative">
-            {/* Carousel Container */}
             <div
               ref={carouselRef}
               className="relative overflow-hidden touch-pan-x select-none carousel-container"
@@ -215,7 +190,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
                     : "transform 300ms ease-in-out",
                 }}
               >
-                {products.map((product, index) => (
+                {products.map((product) => (
                   <div
                     key={product.id}
                     className="flex-shrink-0 px-2"
@@ -227,13 +202,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
               </div>
             </div>
 
-            {/* MODIFICATION: 
-              The entire controls container is now hidden by default and only becomes a 'flex' container
-              on screens 640px (the 'sm' breakpoint) and wider. This hides the progress bar and
-              arrow buttons on mobile, as requested.
-            */}
             <div className="hidden sm:flex items-center justify-between mt-6">
-              {/* Progress Line */}
               <div className="flex-1 mr-4">
                 <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
                   <div
@@ -243,7 +212,6 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
                 </div>
               </div>
 
-              {/* Navigation Arrows */}
               <div className="flex items-center space-x-2">
                 <button
                   onClick={prevSlide}
@@ -285,7 +253,6 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
               </div>
             </div>
 
-            {/* Dots Indicator (This remains visible on all screen sizes) */}
             <div className="flex justify-center mt-4 space-x-2">
               {Array.from({ length: maxIndex + 1 }).map((_, index) => (
                 <button
@@ -306,7 +273,6 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
   );
 };
 
-// Individual Product Card Component for Carousel
 interface ProductCarouselCardProps {
   product: Product;
 }
@@ -315,56 +281,48 @@ const ProductCarouselCard: React.FC<ProductCarouselCardProps> = ({
   product,
 }) => {
   return (
-    <div className="h-full flex flex-col">
-      {/* Product Image Container - Fixed square size with Heritage card background */}
-      <div className="relative w-full h-64 flex items-center justify-center p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl bg-gradient-to-br from-navy-50/80 via-white to-beige-50/80 border border-navy-100/50 backdrop-blur-sm overflow-hidden">
-        {/* Decorative background pattern - same as Heritage card */}
-        <div className="absolute inset-0 opacity-[0.03]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,var(--color-terracotta-400)_1px,transparent_1px),radial-gradient(circle_at_70%_80%,var(--color-navy-400)_1px,transparent_1px)] bg-[length:60px_60px]"></div>
-        </div>
-
-        {/* Product Image/Icon */}
-        <div className="relative z-10">
-          {product.image ? (
-            // ERROR FIX: Replaced Next.js <Image> with a standard <img> tag to resolve the dependency error.
-            // The functionality, including styling and the onError fallback, is preserved.
-            <img
-              src={product.image}
-              alt={`${product.name} product image`}
-              className="w-44 h-44 object-contain"
-              onError={(e) => {
-                // Fallback to emoji if image fails to load
-                const target = e.target as HTMLImageElement;
-                target.style.display = "none";
-                const parent = target.parentElement;
-                if (parent) {
-                  parent.innerHTML = `<span class="text-5xl">${product.icon}</span>`;
-                }
-              }}
-            />
-          ) : (
-            <span className="text-5xl">{product.icon}</span>
-          )}
-        </div>
+    <div className="group relative h-full flex flex-col p-6 rounded-2xl overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-105" style={{ background: `linear-gradient(135deg, ${product.color}, #ffffff)`}}>
+      <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"></div>
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+        <span className="text-white font-frutiger-bold text-lg tracking-wider">View Product</span>
       </div>
 
-      {/* Product Details - Outside the image container */}
-      <div className="mt-6 flex-grow flex flex-col">
+      <div className="relative text-center mb-4">
+        {product.image ? (
+          <img
+            src={product.image}
+            alt={`${product.name} product image`}
+            className="w-full h-48 object-contain transition-transform duration-300 ease-in-out group-hover:scale-110"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = "none";
+              const parent = target.parentElement;
+              if (parent) {
+                parent.innerHTML = `<span class="text-5xl">${product.icon}</span>`;
+              }
+            }}
+          />
+        ) : (
+          <span className="text-5xl">{product.icon}</span>
+        )}
+      </div>
+
+      <div className="relative text-center flex-grow flex flex-col">
         <h4
-          className="text-xl font-frutiger-bold mb-3 leading-tight"
+          className="text-xl font-frutiger-bold mb-2 leading-tight inline-block"
           style={{ color: "var(--color-brand-primary)" }}
         >
           {product.name}
+           <div className="w-0 h-0.5 bg-terracotta-500 mx-auto transition-all duration-300 ease-in-out group-hover:w-1/2"></div>
         </h4>
 
         <p
           className="font-frutiger text-sm mb-4 flex-grow leading-relaxed"
-          style={{ color: "var(--color-charcoal-600)" }}
+          style={{ color: "var(--color-charcoal-700)" }}
         >
           {product.description}
         </p>
 
-        {/* Launch year at bottom */}
         <div className="mt-auto">
           <div
             className="text-xs font-frutiger-bold"
@@ -381,4 +339,3 @@ const ProductCarouselCard: React.FC<ProductCarouselCardProps> = ({
     </div>
   );
 };
-
