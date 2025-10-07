@@ -1,126 +1,233 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { HERO_CONTENT, COMPANY_INFO } from "@/constants/company";
 
+// A single particle component
+const Particle = ({ x, y, size }: { x: number; y: number; size: number }) => (
+  <motion.div
+    className="absolute rounded-full bg-white/20"
+    style={{
+      left: `${x}%`,
+      top: `${y}%`,
+      width: size,
+      height: size,
+    }}
+    animate={{ y: [y, y - 100, y], opacity: [0, 1, 0] }}
+    transition={{
+      duration: Math.random() * 5 + 5,
+      repeat: Infinity,
+      ease: "linear",
+      delay: Math.random() * 5,
+    }}
+  />
+);
+
+// Particle container
+const Particles = ({ count = 20 }) => (
+  <div className="absolute inset-0 z-0">
+    {Array.from({ length: count }).map((_, i) => (
+      <Particle
+        key={i}
+        x={Math.random() * 100}
+        y={Math.random() * 100 + 100}
+        size={Math.random() * 3 + 1}
+      />
+    ))}
+  </div>
+);
+
+
+const bottleImages = [
+  "/images/products/beirut-beer.png",
+  "/images/products/buzz.png",
+  "/images/products/chateau-ka.png",
+];
+
 /**
- * Enhanced Hero section with premium design and mobile-first responsiveness
- * Features sophisticated typography, animations, and optimized mobile experience
+ * A completely revamped, extraordinary Hero section for a premium beverage company.
+ * Features:
+ * - Dynamic 3D-style rotating bottle showcase with Framer Motion.
+ * - Interactive, animated particle background simulating bubbles/fizz.
+ * - Sophisticated, staggered text animations for a premium feel.
+ * - Enhanced micro-interactions on buttons and interactive elements.
+ * - A modern, polished, and mobile-first responsive design.
  */
 export const HeroSection: React.FC = () => {
+  const [currentBottle, setCurrentBottle] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBottle((prev) => (prev + 1) % bottleImages.length);
+    }, 4000); // Rotate bottle every 4 seconds
+    return () => clearInterval(interval);
+  }, []);
+  
+  // Mouse movement interaction for the background
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-100, 100], [-5, 5]);
+  const rotateY = useTransform(x, [-100, 100], [5, -5]);
+
+  const handleMouseMove = (event: React.MouseEvent) => {
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    x.set(event.clientX - rect.left - rect.width / 2);
+    y.set(event.clientY - rect.top - rect.height / 2);
+  };
+  
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
-    <section className="relative overflow-hidden">
-      {/* Enhanced Video Background with Premium Overlay */}
-      <div className="absolute inset-0">
-        {/* Primary gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-navy-900 via-navy-800 to-navy-700"></div>
-        
-        {/* Secondary overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20"></div>
-        
-        {/* Subtle pattern overlay for texture - responsive opacity */}
-        <div className="absolute inset-0 opacity-3 sm:opacity-5 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[length:30px_30px] sm:bg-[length:50px_50px]"></div>
+    <motion.section 
+      className="relative min-h-screen h-screen w-full overflow-hidden flex items-center justify-center"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ perspective: "1000px" }}
+    >
+        {/* Background Layers */}
+        <motion.div 
+            className="absolute inset-0 z-0 bg-gradient-to-br from-navy-900 via-navy-800 to-charcoal-800"
+            style={{ rotateX, rotateY }}
+        >
+            <Particles />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        </motion.div>
 
-        {/* Enhanced Video Placeholder - responsive sizing */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center text-white group px-4">
-            {/* Premium play button - responsive sizing */}
-            <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto mb-3 sm:mb-4 rounded-full border-2 border-white/20 backdrop-blur-sm bg-white/5 flex items-center justify-center group-hover:border-white/40 transition-all duration-500 hover:scale-110 cursor-pointer">
-              <div className="w-0 h-0 border-l-[8px] sm:border-l-[10px] lg:border-l-[12px] border-l-white border-y-[6px] sm:border-y-[8px] lg:border-y-[9px] border-y-transparent ml-1 group-hover:border-l-primary-200 transition-colors"></div>
-            </div>
-            <p className="text-sm sm:text-base font-frutiger-bold tracking-wide">
-              {HERO_CONTENT.videoPlaceholder.title}
-            </p>
-            <p className="text-xs sm:text-sm opacity-70 font-frutiger mt-1">
-              {HERO_CONTENT.videoPlaceholder.subtitle}
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* Main Content Grid */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
-      {/* Hero Content with Enhanced Typography - Mobile Optimized */}
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-16 lg:py-20 xl:py-24">
-        <div className="max-w-4xl">
-          {/* Heritage Badge - Mobile Responsive */}
-          <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-4 sm:mb-6">
+        {/* Left Side: Text Content */}
+        <motion.div
+          className="text-center lg:text-left"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Heritage Badge */}
+          <motion.div variants={itemVariants} className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
             <span className="text-primary-200 text-xs font-frutiger-bold tracking-wider uppercase">
               Est. {COMPANY_INFO.founded}
             </span>
-            <div className="w-1 h-1 bg-primary-200 rounded-full mx-2"></div>
+            <div className="w-1 h-1 bg-primary-200 rounded-full mx-2.5"></div>
             <span className="text-white/90 text-xs font-frutiger">
               50+ Years of Excellence
             </span>
-          </div>
+          </motion.div>
 
-          {/* Main Headline with Enhanced Typography - Mobile First */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-frutiger-bold leading-[1.1] tracking-tight text-white mb-4 sm:mb-6">
-            <span className="block mb-1 sm:mb-2">Catering</span>
-            <span className="block text-primary-200 mb-1 sm:mb-2">Quality Products</span>
-            <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl opacity-90">
-              Since 1974
-            </span>
-          </h1>
+          {/* Main Headline */}
+          <motion.h1
+            variants={itemVariants}
+            className="text-4xl sm:text-5xl md:text-6xl font-frutiger-bold leading-tight tracking-tight text-white mb-6"
+          >
+            A Legacy of <span className="text-primary-300">Taste</span>,
+            <br />
+            Bottling <span className="text-terracotta-300">Innovation</span>.
+          </motion.h1>
 
-          {/* Enhanced Subtitle - Mobile Responsive */}
-          <p className="text-base sm:text-lg lg:text-xl text-white/90 mb-2 sm:mb-3 font-frutiger leading-relaxed max-w-3xl">
+          {/* Subtitle */}
+          <motion.p
+            variants={itemVariants}
+            className="text-base sm:text-lg text-white/80 font-frutiger leading-relaxed max-w-xl mx-auto lg:mx-0 mb-8"
+          >
             {HERO_CONTENT.subtitle}
-          </p>
-
-          {/* Location Badge - Mobile Optimized */}
-          <div className="flex items-center text-primary-200 mb-6 sm:mb-8">
-            <svg className="w-3 h-3 mr-2" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-            </svg>
-            <span className="font-frutiger text-xs sm:text-sm tracking-wide">
-              {COMPANY_INFO.headquarters}
-            </span>
-          </div>
-
-          {/* Enhanced CTA Buttons - Mobile First Design */}
-          <div className="flex flex-row gap-3 sm:gap-4">
+          </motion.p>
+          
+          {/* CTA Buttons */}
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <Button
               href="#products"
               variant="accent"
               size="lg"
-              className="group flex-1 sm:w-auto px-4 sm:px-8 py-3 sm:py-4 rounded-full bg-terracotta-500 hover:bg-terracotta-400 text-white font-frutiger-bold text-sm sm:text-base tracking-wide transition-all duration-300 hover:scale-105 hover:shadow-2xl min-h-[44px] flex items-center justify-center"
+              className="group rounded-full font-frutiger-bold text-base tracking-wide shadow-2xl shadow-terracotta-500/20"
             >
               <span>{HERO_CONTENT.primaryCta}</span>
-              <svg className="ml-1 sm:ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Button>
             
             <a
               href="#tours"
-              className="group flex-1 sm:w-auto px-4 sm:px-8 py-3 sm:py-4 rounded-full border-2 border-white/30 text-white hover:bg-white hover:text-navy-900 font-frutiger-bold text-sm sm:text-base tracking-wide transition-all duration-300 hover:scale-105 backdrop-blur-sm min-h-[44px] flex items-center justify-center"
+              className="group relative px-8 py-4 rounded-full border-2 border-white/30 text-white font-frutiger-bold text-base tracking-wide transition-all duration-300 hover:bg-white/10 hover:border-white/50 backdrop-blur-sm flex items-center justify-center"
             >
-              <svg className="mr-1 sm:mr-2 w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              <svg className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
               <span>{HERO_CONTENT.secondaryCta}</span>
             </a>
-          </div>
+          </motion.div>
+        </motion.div>
 
-          {/* Trust Indicators - Mobile Responsive */}
-          <div className="flex flex-col sm:flex-row sm:items-center mt-8 sm:mt-12 space-y-2 sm:space-y-0 sm:space-x-6 text-white/60">
-            <div className="flex items-center">
-              <div className="w-1.5 h-1.5 bg-primary-300 rounded-full mr-2 flex-shrink-0"></div>
-              <span className="font-frutiger text-xs sm:text-sm">Award-Winning Quality</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-1.5 h-1.5 bg-primary-300 rounded-full mr-2 flex-shrink-0"></div>
-              <span className="font-frutiger text-xs sm:text-sm">Global Distribution</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-1.5 h-1.5 bg-primary-300 rounded-full mr-2 flex-shrink-0"></div>
-              <span className="font-frutiger text-xs sm:text-sm">Lebanese Heritage</span>
-            </div>
-          </div>
+        {/* Right Side: 3D Bottle Showcase */}
+        <div className="relative h-96 w-full flex items-center justify-center">
+            <AnimatePresence>
+                {bottleImages.map((src, index) => 
+                    index === currentBottle && (
+                        <motion.div
+                            key={src}
+                            className="absolute"
+                            initial={{ opacity: 0, scale: 0.8, y: 50, rotateY: 90 }}
+                            animate={{ opacity: 1, scale: 1, y: 0, rotateY: 0 }}
+                            exit={{ opacity: 0, scale: 0.8, y: -50, rotateY: -90 }}
+                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            <motion.img 
+                                src={src} 
+                                alt="Kassatly Chtaura Product" 
+                                className="max-h-96 w-auto object-contain drop-shadow-2xl"
+                                style={{ rotateX, rotateY }}
+                            />
+                        </motion.div>
+                    )
+                )}
+            </AnimatePresence>
         </div>
+
       </div>
 
-      {/* Floating Elements for Visual Interest - Mobile Responsive */}
-      <div className="absolute top-1/4 right-2 sm:right-6 w-16 h-16 sm:w-24 sm:h-24 bg-primary-200/5 rounded-full blur-xl sm:blur-2xl animate-pulse"></div>
-      <div className="absolute bottom-1/4 left-2 sm:left-6 w-12 h-12 sm:w-20 sm:h-20 bg-terracotta-300/5 rounded-full blur-lg sm:blur-xl animate-pulse delay-1000"></div>
-    </section>
+        {/* Scroll Down Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 2, duration: 0.8 }}
+                className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center p-1"
+            >
+                <motion.div 
+                    className="w-1 h-2 bg-white/80 rounded-full"
+                    animate={{ y: [0, 10, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                />
+            </motion.div>
+        </div>
+
+    </motion.section>
   );
 };
+
+export default HeroSection;
