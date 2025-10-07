@@ -139,8 +139,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
       <div className="flex flex-col gap-8">
         {/* Title Section */}
         <div className="text-center">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-teal-50 to-pink-50 border border-teal-100 mb-4">
-            <div className="w-2 h-2 rounded-full bg-gradient-to-r from-teal-400 to-pink-400 mr-3"></div>
+          <div className="inline-flex items-center px-4 py-2 rounded-full border border-terracotta-300 shadow-xl bg-gradient-to-br from-navy-200 via-navy-100 to-white mb-4 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
             <span
               className="text-sm font-frutiger-bold tracking-wider uppercase"
               style={{ color: "var(--color-brand-primary)" }}
