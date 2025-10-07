@@ -68,7 +68,7 @@ export const AboutSection: React.FC = () => {
         <div className="grid gap-16 lg:gap-20 lg:grid-cols-2 items-start">
           
           {/* LEFT COLUMN: Enhanced Storytelling & Description */}
-          <div className="order-2 lg:order-1 pt-8 lg:pt-0">
+          <div className="order-2 lg:order-1 ">
             
             {/* NEW: Premium Badge Design using Gradient background and Tailwind classes */}
             <motion.div 
