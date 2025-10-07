@@ -28,21 +28,22 @@ const itemVariants = {
 
 // Separately define variants for the visual element to give it a unique entrance
 const visualVariants = {
-  hidden: { opacity: 0, scale: 0.9, rotateZ: 3 },
+  hidden: { opacity: 0, scale: 0.95, y: 30, rotateZ: -1.5 }, // Slight initial rotation for flair
   visible: {
     opacity: 1,
     scale: 1,
+    y: 0,
     rotateZ: 0,
     transition: {
       duration: 1.0,
-      ease: [0.2, 0.6, 0.2, 1], // Smooth, custom easing curve
+      ease: [0.2, 0.6, 0.2, 1], // Custom easing curve for premium feel
       delay: 0.3,
     },
   },
 };
 
 /**
- * **EXTREME REVAMP:** A dynamic, multi-layered About section inspired by the Hero's premium,
+ * **EXTREME PREMIUM REVAMP:** A dynamic, multi-layered About section inspired by the Hero's premium,
  * animated aesthetic, focusing on asymmetrical hierarchy and bold visual storytelling.
  */
 export const AboutSection: React.FC = () => {
@@ -69,8 +70,9 @@ export const AboutSection: React.FC = () => {
           {/* LEFT COLUMN: Enhanced Storytelling & Description */}
           <div className="order-2 lg:order-1 pt-8 lg:pt-0">
             
+            {/* NEW: Premium Badge Design using Gradient background and Tailwind classes */}
             <motion.div 
-              className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-navy-100 border border-navy-200 mb-6 sm:mb-8"
+              className="inline-flex items-center px-4 py-2 rounded-full border border-terracotta-300 shadow-xl bg-gradient-to-br from-navy-200 via-navy-100 to-white mb-6 sm:mb-8 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
               variants={itemVariants}
             >
               <span 
@@ -83,7 +85,7 @@ export const AboutSection: React.FC = () => {
 
             {/* Title with Powerful Contrast */}
             <motion.h2 
-              className="mb-6 sm:mb-8"
+              className="mb-6 sm:mb-8 transition-all duration-300"
               variants={itemVariants}
             >
               <span 
@@ -92,9 +94,9 @@ export const AboutSection: React.FC = () => {
               >
                 {ABOUT_CONTENT.title.split(' ').slice(0, 2).join(' ')}
               </span>
+              {/* APPLIED: Gradient to the key phrase "Kassatly Chtaura" */}
               <span 
-                className="block text-2xl sm:text-3xl lg:text-4xl font-frutiger opacity-70"
-                style={{ color: "var(--color-brand-primary)" }}
+                className="block text-2xl sm:text-3xl lg:text-4xl font-frutiger bg-gradient-to-r from-terracotta-500 via-burgundy-500 to-terracotta-500 bg-clip-text text-transparent opacity-100"
               >
                 {ABOUT_CONTENT.title.split(' ').slice(2).join(' ')}
               </span>
@@ -102,7 +104,7 @@ export const AboutSection: React.FC = () => {
 
             {/* Description Block */}
             <motion.div 
-              className="space-y-6 mb-8 sm:mb-12"
+              className="space-y-6 mb-8 sm:mb-12 transition-all duration-300"
               variants={itemVariants}
             >
               <p
@@ -114,7 +116,7 @@ export const AboutSection: React.FC = () => {
               
               {/* Highlighted Quote/Fact Box (Premium Design) */}
               <div 
-                className="p-6 rounded-xl border-l-4 shadow-lg"
+                className="p-6 rounded-xl border-l-4 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.01] cursor-default"
                 style={{ 
                     borderColor: "var(--color-brand-accent)", 
                     backgroundColor: "white",
@@ -170,68 +172,92 @@ export const AboutSection: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* RIGHT COLUMN: Bold Visual Story / Heritage Panel */}
+          {/* RIGHT COLUMN: QUIRKY VISUAL STORY / HERITAGE PANEL - REVAMPED */}
           <motion.div 
             className="order-1 lg:order-2 relative"
-            variants={visualVariants} // Use separate, slower animation for visual element
+            variants={visualVariants}
           >
-            {/* The Visual Panel: Uses layered background for depth */}
-            <div 
-                className="aspect-[4/5] w-full max-w-lg mx-auto rounded-3xl overflow-hidden shadow-3xl relative p-8"
+            <div className="relative group w-full max-w-lg mx-auto">
+              
+              {/* IMAGE CONTAINER with subtle rotate on hover */}
+              <div 
+                className="aspect-[4/5] w-full rounded-3xl overflow-hidden shadow-2xl relative transform transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl hover:rotate-1"
                 style={{ 
-                    backgroundImage: `linear-gradient(145deg, var(--color-brand-primary), var(--color-navy-700))`,
-                    boxShadow: '0 15px 50px -10px rgba(45, 53, 67, 0.8)',
-                    transform: 'translateZ(0)',
+                    // UPDATED: Using user's requested path (assuming the file is now available)
+                    backgroundImage: `url('/about-images/landing.jpg')`, 
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    boxShadow: '0 15px 50px -10px rgba(45, 53, 67, 0.6)',
                 }}
-            >
-                {/* Visual Narrative Placeholder (Abstract Map/Timeline) */}
+              >
+                {/* Layered Gradient Overlay (Darker top/lighter bottom for focus) */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+                
+                {/* Secondary Abstract Layer/Pattern */}
                 <div 
-                    className="absolute inset-0 bg-white/5 opacity-50 backdrop-blur-sm"
+                    className="absolute inset-0 opacity-10 pointer-events-none"
                     style={{ 
-                        backgroundImage: 'radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.1) 1px, transparent 1px), radial-gradient(circle at 85% 85%, rgba(255, 255, 255, 0.1) 1px, transparent 1px)',
-                        backgroundSize: '40px 40px',
+                        backgroundImage: 'radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.3) 1px, transparent 1px)',
+                        backgroundSize: '60px 60px',
                     }}
                 ></div>
+              </div>
 
-                {/* Key Date Callout (Floating - New style) */}
-                <div className="relative z-10 p-4 text-center mt-20">
-                    <div 
-                        className="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"
-                        style={{ backgroundColor: 'var(--color-brand-accent)' }}
-                    >
-                        <span className="text-white text-3xl font-frutiger-bold">50</span>
-                    </div>
-                    <p className="text-xl font-frutiger-bold text-white mb-2">Years of Legacy</p>
-                    <p className="text-white/80 font-frutiger">Since our founding in **1974**</p>
-                </div>
+              {/* FLOATING ELEMENTS - The Quirks (Explicit smooth transition applied) */}
+              
+              {/* 1. Year Founded (Top-Right) - Accent Color on Dark BG */}
+              <div
+                className="absolute -top-6 -right-6 w-24 h-24 sm:w-28 sm:h-28 rounded-full flex flex-col items-center justify-center text-white font-frutiger-bold shadow-xl transition-all duration-500 hover:scale-110 z-10 p-3"
+                style={{ 
+                    backgroundColor: "var(--color-brand-accent)", 
+                    boxShadow: '0 8px 25px rgba(175, 125, 105, 0.6)',
+                    transform: 'translateY(0px) rotate(-5deg)', // Permanent slight rotation for quirk
+                }}
+              >
+                <span className="text-xl sm:text-2xl leading-none">1974</span>
+                <span className="text-xs opacity-90 tracking-widest">EST.</span>
+              </div>
+              
+              {/* 2. Flagship Product Fact (Bottom-Left) - Secondary Color on Light BG */}
+              <div
+                className="absolute -bottom-6 -left-6 w-28 h-28 sm:w-32 sm:h-32 rounded-full flex flex-col items-center justify-center text-white font-frutiger-bold shadow-xl transition-all duration-500 hover:scale-110 delay-100 z-10 p-3"
+                style={{ 
+                    backgroundColor: "var(--color-brand-secondary)", 
+                    boxShadow: '0 8px 25px rgba(155, 140, 100, 0.6)',
+                    transform: 'translateY(0px) rotate(3deg)', // Permanent slight rotation for quirk
+                }}
+              >
+                <span className="text-base sm:text-lg text-white leading-none">First</span>
+                <span className="text-sm sm:text-base opacity-90 font-frutiger-bold">Jallab</span>
+                <span className="text-xs opacity-90 tracking-wide">Bottled</span>
+              </div>
+              
+              {/* 3. International Icon (Bottom-Right, subtle) */}
+              <div 
+                className="absolute -bottom-1 -right-1 p-2 rounded-full bg-navy-900/80 backdrop-blur-sm shadow-xl transition-all duration-300 hover:scale-110 z-20"
+                style={{ 
+                    transform: 'translateY(0px) rotate(0deg)',
+                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)'
+                }}
+              >
+                <svg className="w-8 h-8 text-primary-200" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-1.85.63-3.55 1.69-4.95L15.95 18.31c-1.4.06-2.83.06-4.22 0zM20 12c0 1.85-.63 3.55-1.69 4.95L8.05 5.69c1.4-.06 2.83-.06 4.22 0z"/>
+                </svg>
+              </div>
 
-                {/* Secondary Feature Callout */}
-                <div className="absolute bottom-10 left-10 p-4 rounded-lg backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                    <p className="font-frutiger-bold text-white text-sm">
-                        Headquarters: 
-                        <span className="font-frutiger opacity-80 block">Nahr Al Mot, Lebanon</span>
-                    </p>
-                </div>
-
-                {/* Decorative element (Subtle Brand Mark) */}
-                <div className="absolute top-10 right-10 text-white opacity-20 transform scale-150 rotate-12">
-                    <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.48-7-7.43 0-2.85 1.6-5.34 4-6.62V3.06c3.08.74 5.3 3.5 5.3 6.94 0 3.95-3.03 7.02-7 7.43v2.5z"/>
-                    </svg>
-                </div>
             </div>
           </motion.div>
         </div>
 
-        {/* HORIZONTAL STATS BAR (Separate Block for Max Impact) */}
+        {/* HORIZONTAL STATS BAR (Unchanged, remains bold and powerful) */}
         <motion.div 
-            className="mt-16 sm:mt-20 lg:mt-24 grid grid-cols-3 divide-x rounded-xl overflow-hidden shadow-2xl"
+            className="mt-16 sm:mt-20 lg:mt-24 grid grid-cols-3 divide-x rounded-xl overflow-hidden shadow-2xl transition-all duration-300"
             style={{ 
                 backgroundColor: "var(--color-brand-primary)", 
                 borderColor: "var(--color-navy-700)",
                 boxShadow: '0 10px 30px rgba(45, 53, 67, 0.4)'
             }}
-            variants={staggerContainer} // New stagger for stats
+            variants={staggerContainer}
         >
             {COMPANY_STATS.map((stat, index) => (
                 <motion.div 
