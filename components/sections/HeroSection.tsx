@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { HERO_CONTENT, COMPANY_INFO } from "@/constants/company";
 
@@ -42,20 +42,29 @@ export const HeroSection: React.FC = () => {
   }, []);
   
   // Final, minimal intensity for mouse movement interaction
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+  const rawX = useMotionValue(0); // Raw, instant mouse position input
+  const rawY = useMotionValue(0); // Raw, instant mouse position input
+
+  // Use useSpring to smooth out the raw motion values for a fluid effect
+  // Adjust damping and stiffness for desired lag/smoothness
+  const springConfig = { damping: 20, stiffness: 100, mass: 0.5 };
+  const x = useSpring(rawX, springConfig);
+  const y = useSpring(rawY, springConfig);
+
   const rotateX = useTransform(y, [-100, 100], [-1, 1]);
   const rotateY = useTransform(x, [-100, 100], [1, -1]);
 
   const handleMouseMove = (event: React.MouseEvent) => {
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-    x.set(event.clientX - rect.left - rect.width / 2);
-    y.set(event.clientY - rect.top - rect.height / 2);
+    // Set the instantaneous mouse position to the raw motion values
+    rawX.set(event.clientX - rect.left - rect.width / 2);
+    rawY.set(event.clientY - rect.top - rect.height / 2);
   };
   
   const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
+    // Reset the raw motion values to 0 when the mouse leaves
+    rawX.set(0);
+    rawY.set(0);
   };
 
   const containerVariants = {
@@ -88,7 +97,8 @@ export const HeroSection: React.FC = () => {
 
   return (
     <motion.section 
-      className="relative min-h-screen h-screen w-full overflow-hidden flex items-center justify-center"
+      // MODIFIED: h-auto for default (<380px), h-[calc(100vh-81px)] from 380px up.
+      className="relative h-auto min-[380px]:h-[calc(100vh-81px)] w-full overflow-hidden flex items-center justify-center"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ perspective: "1000px" }}
@@ -100,33 +110,39 @@ export const HeroSection: React.FC = () => {
         {/* Background Layers */}
         <motion.div 
             className="absolute inset-0 z-0"
-            style={{ rotateX, rotateY }}
+            // Apply the parallax rotation and scale the entire background layer (e.g., 115% for safer coverage)
+            style={{ 
+              rotateX, 
+              rotateY,
+              scale: 1.15, 
+            }}
         >
-            <div className="absolute inset-0 overflow-hidden">
-                <motion.div 
-                    className="h-full flex"
-                    style={{ width: `${heroSlides.length * 100}%`}}
-                    animate={{ x: `-${currentIndex * (100 / heroSlides.length)}%` }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                >
-                    {heroSlides.map((slide) => (
-                        <div 
-                            key={slide.backgroundImage}
-                            className="w-full h-full bg-cover bg-center transform scale-110"
-                            style={{ backgroundImage: `url(${slide.backgroundImage})` }}
-                        />
-                    ))}
-                </motion.div>
-            </div>
+            {/* Carousel Container: Now a direct child of the parallax layer */}
+            <motion.div 
+                className="absolute inset-0 h-full flex"
+                style={{ width: `${heroSlides.length * 100}%`}}
+                animate={{ x: `-${currentIndex * (100 / heroSlides.length)}%` }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+            >
+                {heroSlides.map((slide) => (
+                    <div 
+                        key={slide.backgroundImage}
+                        // Removed 'transform scale-110' as it's now applied to the parent motion.div
+                        className="w-full h-full bg-cover bg-center"
+                        style={{ backgroundImage: `url(${slide.backgroundImage})` }}
+                    />
+                ))}
+            </motion.div>
             <div className="absolute inset-0 bg-black/60"></div>
         </motion.div>
 
       {/* Main Content Grid */}
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      {/* MODIFIED: px-6 and h-full applied from 380px up. py-12 is the default spacing. */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4  min-[380px]:px-6 min-[380px]:h-full flex flex-col justify-between lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
 
-        {/* Left Side: Text Content */}
+        {/* Left Side: Text Content - pt-16 is crucial on h-auto for spacing from the Header */}
         <motion.div
-          className="text-center lg:text-left"
+          className="pt-16 text-center lg:pt-0 lg:text-left"
           variants={containerVariants}
         >
           {/* Heritage Badge */}
@@ -158,8 +174,8 @@ export const HeroSection: React.FC = () => {
             {HERO_CONTENT.subtitle}
           </motion.p>
           
-          {/* CTA Buttons */}
-          <motion.div variants={itemVariants} className="flex flex-row gap-4 justify-center lg:justify-start">
+          {/* CTA Buttons - MODIFIED: flex-col for default (<380px), flex-row from 380px up */}
+          <motion.div variants={itemVariants} className="flex flex-col gap-4 justify-center min-[380px]:flex-row lg:justify-start">
             <a
               href="#products"
               className="group relative inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 rounded-full font-frutiger-bold text-white text-sm sm:text-base tracking-wide transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-terracotta-500/30 bg-gradient-to-r from-terracotta-500 to-terracotta-600"
@@ -184,7 +200,8 @@ export const HeroSection: React.FC = () => {
         </motion.div>
 
         {/* Right Side: 3D Bottle Showcase */}
-        <motion.div variants={itemVariants} className="relative h-72 sm:h-96 w-full flex items-center justify-center">
+        {/* MODIFIED: The h-96 size is now applied from 380px up. */}
+        <motion.div variants={itemVariants} className="pb-12 relative h-72 min-[380px]:h-96 w-full flex items-center justify-center lg:pb-0">
             <AnimatePresence>
               <motion.div
                   key={currentIndex}
@@ -194,7 +211,8 @@ export const HeroSection: React.FC = () => {
                   <motion.img 
                       src={heroSlides[currentIndex].bottleImage} 
                       alt="Kassatly Chtaura Product" 
-                      className="max-h-72 sm:max-h-96 w-auto object-contain drop-shadow-2xl"
+                      // MODIFIED: max-h-56 for default (<380px), max-h-96 from 380px up.
+                      className="max-h-56 min-[380px]:max-h-96 w-auto object-contain drop-shadow-2xl"
                       style={{ rotateX, rotateY }}
                   />
               </motion.div>
