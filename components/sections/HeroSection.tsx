@@ -145,9 +145,9 @@ export const HeroSection: React.FC = () => {
             variants={itemVariants}
             className="text-4xl sm:text-5xl md:text-6xl font-frutiger-bold leading-tight tracking-tight text-white mb-6"
           >
-            A Legacy of <span className="bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500/50 bg-clip-text text-transparent">Taste</span>,
+            A Legacy of <span className="bg-gradient-to-br from-primary-300 via-primary-400 to-primary-500/50 bg-clip-text text-transparent">Taste</span>,
             <br />
-            Bottling <span className="bg-gradient-to-r from-terracotta-300 via-terracotta-400 to-terracotta-500/50 bg-clip-text text-transparent">Innovation</span>.
+            Bottling <span className="bg-gradient-to-tr from-terracotta-300 via-terracotta-400 to-terracotta-500/50 bg-clip-text text-transparent">Innovation</span>.
           </motion.h1>
 
           {/* Subtitle */}
