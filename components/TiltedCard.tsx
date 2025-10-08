@@ -16,6 +16,7 @@ interface TiltedCardProps {
   showTooltip?: boolean;
   overlayContent?: React.ReactNode;
   displayOverlayContent?: boolean;
+  gradient?: string;
 }
 
 const springValues: SpringOptions = {
@@ -37,7 +38,8 @@ export default function TiltedCard({
   showMobileWarning = true,
   showTooltip = true,
   overlayContent = null,
-  displayOverlayContent = false
+  displayOverlayContent = false,
+  gradient = ''
 }: TiltedCardProps) {
   const ref = useRef<HTMLElement>(null);
   const x = useMotionValue(0);
@@ -107,24 +109,23 @@ export default function TiltedCard({
       )}
 
       <motion.div
-        className="relative [transform-style:preserve-3d]"
+        className="relative [transform-style:preserve-3d] rounded-[15px] overflow-hidden"
         style={{
           width: imageWidth,
           height: imageHeight,
           rotateX,
           rotateY,
-          scale
+          scale,
+          background: gradient
         }}
       >
-        <motion.img
-          src={imageSrc}
-          alt={altText}
-          className="absolute top-0 left-0 object-cover rounded-[15px] will-change-transform [transform:translateZ(0)]"
-          style={{
-            width: imageWidth,
-            height: imageHeight
-          }}
-        />
+        <motion.div className="p-4 w-full h-full">
+          <motion.img
+            src={imageSrc}
+            alt={altText}
+            className="object-contain w-full h-full will-change-transform [transform:translateZ(0)]"
+          />
+        </motion.div>
 
         {displayOverlayContent && overlayContent && (
           <motion.div className="absolute top-0 left-0 z-[2] will-change-transform [transform:translateZ(30px)]">

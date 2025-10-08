@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Product } from "@/types";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 interface ProductCarouselProps {
   products: Product[];
@@ -279,11 +280,58 @@ interface ProductCarouselCardProps {
 const ProductCarouselCard: React.FC<ProductCarouselCardProps> = ({
   product,
 }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const springConfig = { damping: 30, stiffness: 100, mass: 2 };
+  const rotateX = useSpring(useMotionValue(0), springConfig);
+  const rotateY = useSpring(useMotionValue(0), springConfig);
+  const scale = useSpring(1, springConfig);
+
+  function handleMouse(e: React.MouseEvent<HTMLDivElement>) {
+    if (!ref.current) return;
+
+    const rect = ref.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+
+    const rotationX = (offsetY / (rect.height / 2)) * -14;
+    const rotationY = (offsetX / (rect.width / 2)) * 14;
+
+    rotateX.set(rotationX);
+    rotateY.set(rotationY);
+  }
+
+  function handleMouseEnter() {
+    scale.set(1.05);
+  }
+
+  function handleMouseLeave() {
+    scale.set(1);
+    rotateX.set(0);
+    rotateY.set(0);
+  }
+
   return (
-    <div className="group relative h-full flex flex-col p-6 rounded-2xl overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-105" style={{ background: `linear-gradient(135deg, ${product.color}, #ffffff)`}}>
-      <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"></div>
+    <motion.div
+      ref={ref}
+      className="group relative h-full flex flex-col p-6 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 ease-in-out"
+      style={{
+        background: `linear-gradient(135deg, ${product.color}, #ffffff)`,
+        rotateX,
+        rotateY,
+        scale,
+      }}
+      onMouseMove={handleMouse}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"></div>
       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
-        <span className="text-white font-frutiger-bold text-lg tracking-wider">View Product</span>
+        <span className="text-white font-frutiger-bold text-lg tracking-wider">
+          View Product
+        </span>
       </div>
 
       <div className="relative text-center mb-4">
@@ -312,7 +360,7 @@ const ProductCarouselCard: React.FC<ProductCarouselCardProps> = ({
           style={{ color: "var(--color-brand-primary)" }}
         >
           {product.name}
-           <div className="w-0 h-0.5 bg-terracotta-500 mx-auto transition-all duration-300 ease-in-out group-hover:w-1/2"></div>
+          <div className="w-0 h-0.5 bg-terracotta-500 mx-auto transition-all duration-300 ease-in-out group-hover:w-1/2"></div>
         </h4>
 
         <p
@@ -335,6 +383,6 @@ const ProductCarouselCard: React.FC<ProductCarouselCardProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
