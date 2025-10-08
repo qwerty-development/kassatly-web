@@ -6,3 +6,4 @@ export { ProductCard } from "./ProductCard";
 export { ProductCarousel } from "./ProductCarousel";
 export { VirtualToursSection } from "./VirtualToursSection";
 export { ContactSection } from "./ContactSection";
+export { default as BackgroundForegroundCombo } from "./BackgroundForegroundCombo";
