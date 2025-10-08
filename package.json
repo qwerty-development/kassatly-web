@@ -13,6 +13,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.22",
     "lucide-react": "^0.545.0",
+    "matter-js": "^0.20.0",
     "motion": "^12.23.22",
     "next": "15.4.2",
     "react": "19.1.0",
