@@ -46,18 +46,28 @@ export default function BackgroundForegroundCombo({
   return (
     <div
       ref={ref}
-      className="relative w-full h-screen overflow-hidden"
+      className="relative w-full h-screen overflow-hidden group"
       data-background-index={index}
     >
-      {/* Background Image */}
+      {/* Background Image with enhanced effects */}
       <div className="absolute inset-0 w-full h-full">
         <Image
           src={backgroundImage}
           alt={`${name} background`}
           fill
-          className="object-cover"
+          className="object-cover transition-all duration-700 group-hover:scale-105"
           priority={index === 0} // Only prioritize the first image
         />
+      </div>
+
+      {/* Subtle overlay for better text contrast if needed */}
+      <div className="absolute inset-0 bg-black/10" />
+
+      {/* Background name indicator (subtle) */}
+      <div className="absolute top-8 left-8 z-10">
+        <div className="bg-black/20 backdrop-blur-sm rounded-full px-4 py-2 text-white text-sm font-medium">
+          {name.toUpperCase()}
+        </div>
       </div>
     </div>
   );

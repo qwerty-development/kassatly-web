@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useState, useCallback } from "react";
 import BackgroundForegroundCombo from "@/components/sections/BackgroundForegroundCombo";
 import FixedForeground from "@/components/sections/FixedForeground";
@@ -40,13 +40,13 @@ export default function FreezPage() {
     <div className="min-h-screen bg-white relative">
       <Header />
 
-      {/* Fixed Foreground Component - stays centered and changes based on active background */}
-      <FixedForeground
-        imageCombinations={imageCombinations}
-        activeIndex={activeBackgroundIndex}
-      />
-
       <main className="w-full relative z-10">
+        {/* Fixed Foreground Component - positioned to overlay all backgrounds */}
+        <FixedForeground
+          imageCombinations={imageCombinations}
+          activeIndex={activeBackgroundIndex}
+        />
+
         {imageCombinations.map((combo, index) => (
           <BackgroundForegroundCombo
             key={combo.name}
