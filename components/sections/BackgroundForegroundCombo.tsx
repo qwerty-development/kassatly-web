@@ -1,18 +1,54 @@
 import Image from "next/image";
+import { useRef, useEffect } from "react";
 
 interface BackgroundForegroundComboProps {
   backgroundImage: string;
-  foregroundImage: string;
   name: string;
+  index: number;
+  onIntersection: (index: number, isIntersecting: boolean) => void;
 }
 
 export default function BackgroundForegroundCombo({
   backgroundImage,
-  foregroundImage,
   name,
+  index,
+  onIntersection,
 }: BackgroundForegroundComboProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Trigger when more than 50% of the element is visible
+        if (entry.intersectionRatio > 0.5) {
+          onIntersection(index, true);
+        } else {
+          onIntersection(index, false);
+        }
+      },
+      {
+        threshold: 0.5, // Trigger when 50% of the element is visible
+        rootMargin: "0px",
+      }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [index, onIntersection]);
+
   return (
-    <div className="relative w-full h-screen flex items-center justify-center overflow-hidden">
+    <div
+      ref={ref}
+      className="relative w-full h-screen overflow-hidden"
+      data-background-index={index}
+    >
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full">
         <Image
@@ -20,18 +56,7 @@ export default function BackgroundForegroundCombo({
           alt={`${name} background`}
           fill
           className="object-cover"
-          priority
-        />
-      </div>
-
-      {/* Foreground Image - Centered */}
-      <div className="relative z-10 flex items-center justify-center">
-        <Image
-          src={foregroundImage}
-          alt={`${name} foreground`}
-          width={800}
-          height={600}
-          className="object-contain max-w-[90vw] max-h-[90vh]"
+          priority={index === 0} // Only prioritize the first image
         />
       </div>
     </div>

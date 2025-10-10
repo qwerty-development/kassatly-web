@@ -1,4 +1,7 @@
+'use client';
+import { useState, useCallback } from "react";
 import BackgroundForegroundCombo from "@/components/sections/BackgroundForegroundCombo";
+import FixedForeground from "@/components/sections/FixedForeground";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -22,19 +25,39 @@ const imageCombinations = [
 ];
 
 export default function FreezPage() {
+  const [activeBackgroundIndex, setActiveBackgroundIndex] = useState(0);
+
+  const handleIntersection = useCallback(
+    (index: number, isIntersecting: boolean) => {
+      if (isIntersecting) {
+        setActiveBackgroundIndex(index);
+      }
+    },
+    []
+  );
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative">
       <Header />
-      <main className="w-full">
+
+      {/* Fixed Foreground Component - stays centered and changes based on active background */}
+      <FixedForeground
+        imageCombinations={imageCombinations}
+        activeIndex={activeBackgroundIndex}
+      />
+
+      <main className="w-full relative z-10">
         {imageCombinations.map((combo, index) => (
           <BackgroundForegroundCombo
             key={combo.name}
             backgroundImage={combo.backgroundImage}
-            foregroundImage={combo.foregroundImage}
             name={combo.name}
+            index={index}
+            onIntersection={handleIntersection}
           />
         ))}
       </main>
+
       <Footer />
     </div>
   );
