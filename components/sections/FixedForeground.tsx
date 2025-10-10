@@ -8,16 +8,17 @@ interface FixedForegroundProps {
     foregroundImage: string;
   }>;
   activeIndex: number;
+  onDotClick: (index: number) => void; // Added prop for click handling
 }
 
 export default function FixedForeground({
   imageCombinations,
   activeIndex,
+  onDotClick, // Destructure the new prop
 }: FixedForegroundProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // Enhanced transition effect with multiple animation phases
   useEffect(() => {
     setIsAnimating(true);
     setIsVisible(false);
@@ -43,7 +44,6 @@ export default function FixedForeground({
           isVisible ? "opacity-100 scale-100" : "opacity-0 scale-90"
         } ${isAnimating ? "animate-pulse" : ""}`}
       >
-        {/* Just the image - no background styling */}
         <Image
           src={imageCombinations[activeIndex]?.foregroundImage || ""}
           alt={`${imageCombinations[activeIndex]?.name || ""} foreground`}
@@ -54,16 +54,18 @@ export default function FixedForeground({
         />
       </div>
 
-      {/* Active indicator dots - right side, stacked vertically */}
-      <div className="absolute right-8 top-1/2 transform -translate-y-1/2 flex flex-col space-y-3">
+      {/* Overlay and clickable dots */}
+      <div className="absolute right-8 top-1/2 transform -translate-y-1/2 flex flex-col space-y-3 p-2 bg-black/20 rounded-full backdrop-blur-sm pointer-events-auto">
         {imageCombinations.map((_, index) => (
-          <div
+          <button
             key={index}
+            onClick={() => onDotClick(index)} // Call the handler on click
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
               index === activeIndex
                 ? "bg-white shadow-lg scale-125"
                 : "bg-white/50 hover:bg-white/75"
             }`}
+            aria-label={`Go to section ${index + 1}`}
           />
         ))}
       </div>

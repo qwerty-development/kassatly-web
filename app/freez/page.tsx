@@ -1,11 +1,11 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react"; // Import useRef
 import BackgroundForegroundCombo from "@/components/sections/BackgroundForegroundCombo";
 import FixedForeground from "@/components/sections/FixedForeground";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
-// Define the image combinations based on the available files
+// ... (imageCombinations array remains the same)
 const imageCombinations = [
   {
     name: "apple-grape",
@@ -74,8 +74,11 @@ const imageCombinations = [
   },
 ];
 
+
 export default function FreezPage() {
   const [activeBackgroundIndex, setActiveBackgroundIndex] = useState(0);
+  // Create a ref to hold an array of DOM elements
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleIntersection = useCallback(
     (index: number, isIntersecting: boolean) => {
@@ -86,20 +89,30 @@ export default function FreezPage() {
     []
   );
 
+  // Function to handle dot clicks
+  const handleDotClick = (index: number) => {
+    sectionRefs.current[index]?.scrollIntoView({
+      behavior: "smooth",
+      block: "center", // Scrolls the section to the center of the viewport
+    });
+  };
+
   return (
     <div className="min-h-screen bg-white relative">
       <Header />
 
       <main className="w-full relative z-10">
-        {/* Fixed Foreground Component - positioned to overlay all backgrounds */}
         <FixedForeground
           imageCombinations={imageCombinations}
           activeIndex={activeBackgroundIndex}
+          onDotClick={handleDotClick} // Pass the click handler
         />
 
         {imageCombinations.map((combo, index) => (
           <BackgroundForegroundCombo
             key={combo.name}
+            // Assign the ref for each section to our array
+            ref={(el) => (sectionRefs.current[index] = el)}
             backgroundImage={combo.backgroundImage}
             name={combo.name}
             index={index}
@@ -112,4 +125,3 @@ export default function FreezPage() {
     </div>
   );
 }
-
